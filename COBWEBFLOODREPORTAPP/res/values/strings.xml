@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- COBWEBMainActivity   String values -->
+
+    <string name="app_name"><b>COBWEB FLOOD REPORT APP</b></string>
+    <string name="action_settings">Settings</string>
+    <string name="warningTextview"><b>WARNING:</b><i>Flood Alerts are in place within your area</i></string>
+    <string name="flood_map_button"><b>FLOOD MAP</b></string>
+    <string name="offline_button"><b>SUBMIT OFFLINE DATA</b></string>
+    <string name="take_photo_button"><b>TAKE PHOTOS</b></string>
+    <string name="help_button"><b>HELP</b></string>
+    <string name="cy_button"><b>CY</b></string>
+    <string name="en_button"><b>EN</b></string>
+    <string name="logo_textView"></string>
+    <string name="title_activity_photo"><B>COBWEB PHOTO PREVIEW</B></string>
+    <string name="Profile_update"><B>User Profile Update</B></string>
+
+    <!-- Strings related to login -->
+
+    <string name="title_activity_cobweblogin">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_register"><b>Sign in</b></string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_forgot_password">Recover lost password</string>
+    <string name="login_progress_signing_in">Signing in&#8230;</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="sign_in_info_text">COBWEB Log in</string>
+    <string name="sign_up_button"><b>Sign Up</b></string>
+    <string name="forget_paswd_text">forget your password</string>
+    <string name="sign_in_google_button">Sign in with Google</string>
+    <string name="sign_in_facebook_button">Sign in with Facebook</string>
+    <string name="skip_button">Skip Log in</string>
+
+    <!-- PHOTOActivity   String values -->
+
+    <string name="photView_button"><b>PHOTO PREVIEW</b></string>
+    <string name="next_button"><b>NEXT</b></string>
+    <string name="add_button"><b>ADD</b></string>
+    <string name="retake_button"><b>NEW</b></string>
+    <string name="delete_button"><b>DELETE</b></string>
+    <string name="small_imagesInfoButton"><b>PHOTO GROUPING</b></string>
+    <string name="submit_photo_button"><b>SUBMIT PHOTO</b></string>
+    <string name="title_activity_map_display"><b>MapDisplay</b></string>
+    <string name="title_activity_map">Map</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Dialogue String values -->
+
+    <string name="dialog_headingText"><b><i>Flood Additional Informations</i></b></string>
+    <string name="dialog_type"><b>Type :</b></string>
+    <string name="dialog_velo"><b>Flow Velocity :</b></string>
+    <string name="dialog_depth"><b>Depth Estimate :</b></string>
+    <string name="note"><b>Note</b></string>
+    <string name="note_text"></string>
+
+    <string-array name="dialog_type_spinnerText">
+        <item>Flood</item>
+        <item>Severe Flood</item>
+        <item>Debris</item>
+        <item>Trash line</item>
+    </string-array>
+    <string-array name="dialog_velo_spinner">
+        <item>Stationary</item>
+        <item>Fast</item>
+        <item>Slow</item>
+    </string-array>
+    <string-array name="dialog_depth_spinner">
+        <item>&lt;1m</item>
+        <item>1&#8211;2m</item>
+        <item>&gt;2m</item>
+    </string-array>
+
+    <string name="title_activity_user_log_in">COBWEB Log in</string>
+    <string name="title_activity_cobwebnotification">COBWEBNotification</string>
+    <string name="title_activity_polygon_layer_map">PolygonLayerMap</string>
+
+    <!-- PolygoneLayerMap String values -->
+
+    <string name="adminInfo1"><b>MOCKED ADMIN SETTINGS</b></string>
+      <string name="adminInfo2">Other settings might come in here</string>
+    <string name="polygonMap"><b>DRAW NOTIFICATION POLYGON</b></string>
+
+    
+    <!-- Admin Page Setting -->
+
+    <string name="polygon_info"><b>NOTE : <i>To display a polygon, touch the corner edges of area to lay a polygon, only touch once to display an icon, double tap icon to remove and press down and drag icon  </i></b></string>
+    <string name="addPolygon">Lay a Polygon</string>
+    <string name="deletePolygon">delete Polygon</string>
+    <string name="backToSubmit">Back to Submit</string>
+    <string name="photoPreview">Photo Preview</string>
+    
+    
+    
+
+    <!-- In code Messages   String values -->
+
+    <string name="serverMsg"> Server is not available at this time</string>
+    <string name="profileMsg"> Profile is not yet set</string>
+    <string name="helpMsg"> Not Needed at this time</string>
+    
+    <string name="addPhot"> No Photos added</string>
+    <string name="locUnknow"> Location can not be resolved</string>
+    <string name="photoCancel"> PHOTO WAS CANCELLED</string>
+     <string name="database"> Database is Temporarily Unavailabe, Data is temporary saved offline</string>
+    
+    
+    
+    
+    <string name="title_activity_admin_polygon_map">AdminPolygonMap</string>
+    <string name="title_activity_main">MainActivity</string>
+
+</resources>

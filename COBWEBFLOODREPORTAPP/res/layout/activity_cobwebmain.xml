@@ -1,0 +1,124 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/language_buttonView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<RelativeLayout 
+    
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".COBWEBMainActivity" >
+    
+    
+    <TextView
+        android:id="@+id/warningTextview"
+        android:background="#006600"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/flood_map_button"
+        android:layout_alignRight="@+id/flood_map_button"
+       
+        android:textColor="#CCFF00"
+        android:text="@string/warningTextview"  />  
+
+    <Button
+        android:id="@+id/flood_map_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/flood_map_button"
+        android:textColor="#FFFFFF"
+        android:layout_alignLeft="@+id/offline_button"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/warningTextview"
+        android:text="@string/flood_map_button"/>
+    <Button
+        android:id="@+id/offline_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/offline_button"
+        android:textColor="#FFFFFF"
+        android:layout_alignLeft="@+id/take_photo_button"
+        android:layout_alignRight="@+id/take_photo_button"
+        android:layout_below="@+id/flood_map_button"
+        android:layout_marginTop="34dp"
+        android:text="@string/offline_button"/>
+    <Button
+        android:id="@+id/take_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:background="@drawable/take_photo_button"
+        android:textColor="#FFFFFF"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/help_button"
+        android:layout_below="@+id/offline_button"
+        android:layout_marginTop="34dp"
+        android:text="@string/take_photo_button" />
+
+    <Button
+        android:id="@+id/help_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/help_button"
+        android:textColor="#FFFFFF"
+        android:layout_alignLeft="@+id/en_button"
+        android:layout_alignRight="@+id/cy_button"
+        android:layout_below="@+id/take_photo_button"
+        android:layout_marginTop="15dp"
+        android:text="@string/help_button" />
+
+    <Button
+        android:id="@+id/cy_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:background="@drawable/cy_button"
+        android:textColor="#000000"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/help_button"
+        android:layout_marginTop="15dp"
+        android:text="@string/cy_button" />
+
+    <Button
+        android:id="@+id/en_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:background="@drawable/en_button"
+        android:textColor="#FFFFFF"
+        android:layout_alignBaseline="@+id/cy_button"
+        android:layout_alignBottom="@+id/cy_button"
+        android:layout_toLeftOf="@+id/cy_button"
+        android:text="@string/en_button" />
+
+    <Button
+        android:id="@+id/profile_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/update_button"
+        android:textColor="#FFFFFF"
+        android:layout_above="@+id/cy_button"
+        android:layout_alignLeft="@+id/take_photo_button"
+        android:text="@string/Profile_update" />
+
+    <TextView
+        android:id="@+id/logo_textView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignLeft="@+id/profile_update"
+        android:layout_alignTop="@+id/en_button"
+        android:layout_toLeftOf="@+id/en_button"
+        android:background="@drawable/logo5" />
+
+</RelativeLayout>
+
+</ScrollView>

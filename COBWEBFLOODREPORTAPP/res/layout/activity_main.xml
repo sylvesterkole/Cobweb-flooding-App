@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/adminInfo1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="@string/adminInfo1"
+        android:textColor="#58ACFA"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/polygonMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/adminInfo1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:background="@drawable/flood_map_button"
+        android:text="@string/polygonMap"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/adminInfo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/adminInfo1"
+        android:layout_centerVertical="true"
+        android:text="@string/adminInfo2"
+        android:textColor="#58ACFA"
+        android:textSize="30sp" />
+    
+    
+    
+     <Button
+        android:id="@+id/fldmap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/adminInfo2"
+        android:layout_below="@+id/adminInfo2"
+        android:background="@drawable/add_button"
+         android:textColor="#FFFFFF"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="26dp"
+        android:text="@string/flood_map_button" />
+
+         <Button
+             android:id="@+id/photopreview"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignBaseline="@+id/fldmap"
+             android:layout_alignBottom="@+id/fldmap"
+             android:layout_marginLeft="14dp"
+             android:layout_toRightOf="@+id/fldmap"
+             android:background="@drawable/add_button"
+             android:text="@string/take_photo_button"
+             android:textColor="#FFFFFF" />
+
+</RelativeLayout>

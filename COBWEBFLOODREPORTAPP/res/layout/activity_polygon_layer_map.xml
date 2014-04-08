@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".PolygonLayerMap" >
+
+    <TextView
+        android:id="@+id/polygon_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#006600"
+        android:textColor="#CCFF00"
+        android:text="@string/polygon_info" />
+    <FrameLayout
+        android:id="@+id/mapFrame"
+        android:layout_width="match_parent"
+        android:layout_height="4000dp"
+        android:layout_above="@+id/addPolygon"
+         android:layout_below="@+id/polygon_info" >
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/openmapview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/addPolygon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/update_button"
+        android:layout_alignLeft="@+id/mapFrame"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/deletePolygon"
+        android:text="@string/addPolygon" />
+
+    <Button
+        android:id="@+id/deletePolygon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/addPolygon"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/help_button"
+        android:text="@string/deletePolygon" />
+
+    <Button
+        android:id="@+id/backToSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/mapFrame"
+        android:layout_alignTop="@+id/deletePolygon"
+        android:layout_toRightOf="@+id/deletePolygon"
+        android:background="@drawable/update_button"
+        android:text="@string/backToSubmit" />
+
+</RelativeLayout>

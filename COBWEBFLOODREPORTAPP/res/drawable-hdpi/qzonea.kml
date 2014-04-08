@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>QZoneA</name>
+<Schema name="QZoneA" id="QZoneA">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Descriptio" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>TalybontA</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#QZoneA">
+		<SimpleData name="Name">TalybontA</SimpleData>
+		<SimpleData name="Descriptio">Test Zone A</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-3.982921907860719,52.482929123769743,0 -3.982944660042403,52.483531269648118,0 -3.981976291859772,52.483502860547247,0 -3.982025901599173,52.482889194197242,0 -3.982921907860719,52.482929123769743,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>

@@ -1,0 +1,163 @@
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".PHOTOActivity" >
+
+    <!-- Login progress -->
+
+    <LinearLayout
+        android:id="@+id/login_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/login_status_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/login_progress_signing_in"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+
+
+
+<ScrollView 
+        android:id="@+id/photoScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:fillViewport="true">
+        
+	 <RelativeLayout
+	     android:layout_width="match_parent"
+	     android:layout_height="wrap_content"
+	     tools:context=".PhotoView" >
+	
+	    <Button
+	        android:id="@+id/photView_button"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:background="#00CCCC"
+	        android:textColor="#FFFFFF"
+
+	        android:layout_alignParentTop="true"
+	        android:layout_centerHorizontal="true"
+	        android:text="@string/photView_button" />
+	
+	    <FrameLayout
+	        android:id="@+id/big_image_frameLayout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/photView_button"
+	        android:layout_below="@+id/photView_button"
+	        android:layout_marginLeft="0dp"
+	        android:layout_marginTop="2dp"
+	        android:layout_toLeftOf="@+id/next_add_layout" >
+	
+	        <ImageView
+	            android:id="@+id/big_imageView"
+	            android:layout_width="match_parent"
+	            android:layout_height="252dp"
+	            android:layout_marginBottom="1dp"
+	            android:layout_marginLeft="1dp"
+	            android:src="@drawable/imagelogo" />
+	
+	    </FrameLayout>
+	
+	    <LinearLayout
+	        android:id="@+id/next_add_layout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+	     android:paddingRight="@dimen/activity_horizontal_margin"
+	        android:layout_alignBottom="@+id/big_image_frameLayout"
+	        android:layout_alignRight="@+id/small_imagesInfoButton"
+	        android:layout_alignTop="@+id/big_image_frameLayout"
+	        android:layout_marginBottom="10dp"
+	        android:orientation="vertical" >
+
+	        <Button
+	            android:id="@+id/add_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="5dp"
+	            android:background="@drawable/add_button"
+	            android:text="@string/add_button"
+	            android:textColor="#FFFFFF" />
+	
+	        <Button
+	            android:id="@+id/next_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:textColor="#FFFFFF"
+	            android:layout_marginBottom="5dp"
+	            android:background="@drawable/next_button"
+	            android:text="@string/next_button" />
+
+	        <Button
+	            android:id="@+id/delete_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:background="@drawable/help_button"
+	            android:textColor="#FFFFFF"
+	            android:layout_marginBottom="30dp"
+	            android:text="@string/delete_button" />
+
+	        <Button
+	            android:id="@+id/retake_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	              android:textColor="#FFFFFF"
+	        android:background="@drawable/new_photo"
+	            android:text="@string/retake_button" />
+
+	    </LinearLayout>
+	
+	    <Button
+	        android:id="@+id/small_imagesInfoButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	         android:background="#00CCCC"
+	        android:textColor="#FFFFFF"
+	        android:layout_alignLeft="@+id/photView_button"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@+id/big_image_frameLayout"
+	        android:text="@string/small_imagesInfoButton" />
+
+	    <GridView
+	        android:id="@+id/gridView"
+	        android:layout_width="match_parent"
+	        android:layout_height="210dp"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+	        android:paddingRight="@dimen/activity_horizontal_margin"
+	        android:layout_alignLeft="@+id/small_imagesInfoButton"
+	        android:layout_below="@+id/small_imagesInfoButton"
+	        android:numColumns="4" >
+	    </GridView>
+
+	    <Button
+	        android:id="@+id/submit_photo_button"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+	     android:paddingRight="@dimen/activity_horizontal_margin"
+	        android:textColor="#FFFFFF"
+	        android:background="@drawable/take_photo_button"
+	        android:layout_alignParentBottom="true"
+	        android:text="@string/submit_photo_button" />
+	
+	</RelativeLayout>
+</ScrollView>
+
+</merge> 

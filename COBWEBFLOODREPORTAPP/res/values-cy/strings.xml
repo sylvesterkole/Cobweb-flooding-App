@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+      <!-- COBWEBMainActivity   String values -->
+
+    <string name="app_name"><b>COBWEB LLIFOGYDD ADRODDIAD APP</b></string>
+    <string name="action_settings">Settings</string>
+    <string name="warningTextview"><b>RHYBUDD:</b><i>Rhybuddion Llifogydd yn eu lle o fewn eich ardal</i></string>
+    <string name="flood_map_button"><b>LLIFOGYDD MAP</b></string>
+    <string name="offline_button"><b>CYFLWYNO DATA All-lein</b></string>
+    <string name="take_photo_button"><b>CYMRYD LLUNIAU</b></string>
+    <string name="help_button"><b>HELP</b></string>
+    <string name="cy_button"><b>CY</b></string>
+    <string name="en_button"><b>EN</b></string>
+    <string name="logo_textView"></string>
+    <string name="title_activity_photo"><B>COBWEB PREVIEW PHOTO</B></string>
+    <string name="Profile_update"><B>Proffil Defnyddiwr Diweddariad</B></string>
+
+    <!-- Strings related to login -->
+
+    <string name="title_activity_cobweblogin">Mewngofnodi mewn Page</string>
+    <string name="prompt_email">E-bost</string>
+    <string name="prompt_password">Cyfrinair</string>
+    <string name="action_sign_in_register"><b>Cofrestrwch yn</b></string>
+    <string name="action_sign_in_short">Cofrestrwch yn</string>
+    <string name="action_forgot_password">Adennill cyfrinair coll</string>
+    <string name="login_progress_signing_in">Arwyddo mewn&#8230;</string>
+    <string name="error_invalid_email">Mae\'r cyfeiriad e-bost yn annilys</string>
+    <string name="error_invalid_password">Mae\'r cyfrinair yn rhy fyr</string>
+    <string name="error_incorrect_password">Mae\'r cyfrinair yn anghywir</string>
+    <string name="error_field_required">Mae angen y cae</string>
+    <string name="sign_in_info_text">COBWEB Mewngofnodi</string>
+    <string name="sign_up_button"><b>Cofrestru</b></string>
+    <string name="forget_paswd_text">anghofio eich cyfrinair</string>
+    <string name="sign_in_google_button">Mewngofnodi gyda Google</string>
+    <string name="sign_in_facebook_button">Mewngofnodi gyda Facebook</string>
+    <string name="skip_button">Skip Mewngofnodi</string>
+
+    <!-- PHOTOActivity   String values -->
+
+    <string name="photView_button"><b>PREVIEW PHOTO</b></string>
+    <string name="next_button"><b>NESAF</b></string>
+    <string name="add_button"><b>ADD</b></string>
+    <string name="retake_button"><b>NEWYDD</b></string>
+    <string name="delete_button"><b>DILEU</b></string>
+    <string name="small_imagesInfoButton"><b>GRWPIAU PHOTO</b></string>
+    <string name="submit_photo_button"><b>CYFLWYNO PHOTO</b></string>
+    <string name="title_activity_map_display"><b> Map Arddangos</b></string>
+    <string name="title_activity_map">Map</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Dialogue String values -->
+
+    <string name="dialog_headingText"><b><i>Llifogydd informations ychwanegol</i></b></string>
+    <string name="dialog_type"><b>Math :</b></string>
+    <string name="dialog_velo"><b>Cyflymder llif :</b></string>
+    <string name="dialog_depth"><b>Amcangyfrif Dyfnder :</b></string>
+    <string name="note"><b>Nodyn</b></string>
+    <string name="note_text"></string>
+
+    <string-array name="dialog_type_spinnerText">
+        <item>Flood</item>
+        <item>Severe Flood</item>
+        <item>Debris</item>
+        <item>Trash line</item>
+    </string-array>
+    <string-array name="dialog_velo_spinner">
+        <item>Stationary</item>
+        <item>Fast</item>
+        <item>Slow</item>
+    </string-array>
+    <string-array name="dialog_depth_spinner">
+        <item>&lt;1m</item>
+        <item>1&#8211;2m</item>
+        <item>&gt;2m</item>
+    </string-array>
+
+    <string name="title_activity_user_log_in">COBWEB Mewngofnodi</string>
+    <string name="title_activity_cobwebnotification">COBWEBHysbysu</string>
+
+
+      
+    <!-- PolygoneLayerMap String values -->
+    
+      
+   <string name="polygon_info"><b>NODYN : <i>I arddangos polygon, cyffwrdd y ymylon gornel ardal i osod polygon, dim ond cyffwrdd unwaith i arddangos eicon, dwbl icon tap i gael gwared a phwyso i lawr ac eicon llusgo </i></b></string>
+    
+    <string name="addPolygon">Gosodwch Polygon</string> 
+    <string name="deletePolygon">dileu Polygon</string> 
+    <string name="backToSubmit">Yn ôl i Gyflwyno</string> 
+     
+     
+     
+     
+     
+     <string name="serverMsg"> Nid yw gweinydd ar gael ar hyn o bryd</string> 
+    
+    
+     <string name="adminInfo1"><b>LLEOLIADAU ADMIN gwatwar</b></string>
+      <string name="adminInfo2">Gallai lleoliadau eraill yn dod i mewn yma</string>
+    <string name="polygonMap"><b>DRAW polygon HYSBYSU</b></string>
+
+    
+    <!-- Admin Page Setting -->
+
+    <string name="photoPreview">Photo Preview</string>
+    
+    
+    
+
+    <!-- In code Messages   String values -->
+
+
+    <string name="profileMsg"> Nid yw proffil yn cael ei bennu ar eu cyfer</string>
+    <string name="helpMsg"> Ddim yn Angen ar hyn o bryd</string>
+    
+    <string name="addPhot"> No Photos added</string>
+    <string name="locUnknow">  Dim Lluniau ychwanegol</string>
+    <string name="photoCancel"> PHOTO WS GANSLO</string>
+     <string name="database">  Cronfa Ddata yn dros dro Unavailabe, Data is offline arbed dros dro</string>
+    
+    
+     
+     
+     
+</resources>
