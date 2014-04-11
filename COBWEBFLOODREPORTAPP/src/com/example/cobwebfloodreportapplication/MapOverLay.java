@@ -3,20 +3,12 @@ package com.example.cobwebfloodreportapplication;
 import java.util.ArrayList;
 
 import org.osmdroid.ResourceProxy;
-
-import org.osmdroid.ResourceProxy.bitmap;
 import org.osmdroid.api.IMapView;
-import org.osmdroid.api.Marker;
-
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlay;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
-
-
 
 import android.app.Activity;
 import android.graphics.Point;

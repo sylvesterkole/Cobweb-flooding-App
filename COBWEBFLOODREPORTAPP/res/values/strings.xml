@@ -107,7 +107,7 @@
     <string name="locUnknow"> Location can not be resolved</string>
     <string name="photoCancel"> PHOTO WAS CANCELLED</string>
      <string name="database"> Database is Temporarily Unavailabe, Data is temporary saved offline</string>
-    
+    <string name="noUpload"> No files to uplaod</string>
     
     
     

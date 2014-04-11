@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.api.IMapView;
-import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -13,7 +12,7 @@ import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
- 
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -21,7 +20,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
-import android.widget.Toast;
  
 public class MyItemizedOverlay extends ItemizedOverlay<OverlayItem> {
   

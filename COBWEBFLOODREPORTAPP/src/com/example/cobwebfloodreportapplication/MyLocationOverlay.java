@@ -2,7 +2,6 @@ package com.example.cobwebfloodreportapplication;
 
 import java.util.List;
 
-import org.osmdroid.ResourceProxy.bitmap;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -15,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.location.Location;

@@ -2,11 +2,11 @@ package com.example.cobwebfloodreportapplication;
 
 
 
-import java.util.Date;
+import geofence.GeoFencing;
+import geofence.Point;
+import geofence.Polygon;
 
 import org.osmdroid.util.GeoPoint;
-
-import geofence.*;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;

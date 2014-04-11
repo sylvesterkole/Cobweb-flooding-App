@@ -3,12 +3,9 @@ package com.example.cobwebfloodreportapplication;
 
 
 import java.util.ArrayList;
-import java.util.Date;
-
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
-import org.osmdroid.ResourceProxy.bitmap;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -16,19 +13,16 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.PathOverlay;
 
-import android.os.Bundle;
-import android.os.Environment;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.Menu;
-import android.widget.Toast;
 
 
 	public class Map extends Activity {

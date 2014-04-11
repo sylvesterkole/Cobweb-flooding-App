@@ -4,8 +4,6 @@ import geofence.GeoFencing;
 import geofence.Point;
 import geofence.Polygon;
 
-
-
 import org.osmdroid.util.GeoPoint;
 
 import android.annotation.SuppressLint;

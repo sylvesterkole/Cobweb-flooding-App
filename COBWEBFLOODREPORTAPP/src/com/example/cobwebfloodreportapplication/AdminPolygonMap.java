@@ -11,22 +11,21 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 
-import com.example.cobwebfloodreportapplication.COBWEBNotificationService.LocalBinder;
-
-import android.os.Bundle;
-import android.os.IBinder;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.cobwebfloodreportapplication.COBWEBNotificationService.LocalBinder;
 
 public class AdminPolygonMap extends Activity implements OnClickListener{
 	private MapView map;

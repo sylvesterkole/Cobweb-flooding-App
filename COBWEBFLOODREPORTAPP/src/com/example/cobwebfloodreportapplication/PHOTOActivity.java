@@ -1,28 +1,13 @@
 package com.example.cobwebfloodreportapplication;
 
 import java.io.File;
-import java.io.InputStream;
-
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
-import cobweb.databaseObject.Submission;
-
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -31,24 +16,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import cobweb.databaseObject.Submission;
 
 public class PHOTOActivity extends Activity implements OnClickListener {
+
+	public final static String SFOLDER = "COBWEB";
 
 	private static final int REQUEST_IMAGE_CAPTURE = 100;
 	protected static final int POLYGON = 101;
@@ -60,6 +47,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private Button deleteImage;
 	private Button submitImage;
 	private ImageView imageView;
+
 	// private LocationFinder loc;
 	private File storageDir;
 	private ArrayList<Bitmap> imageItem = new ArrayList<Bitmap>();
@@ -75,8 +63,10 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private PHOTOActivity main = this;
 	private Submission submitData;
 
+	String pp;
+
 	private HashMap<Bitmap, String> photoPath;
-	  ProgressDialog progress;
+	ProgressDialog progress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,8 +149,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			}
 
 			if (!setLocation()) {
-				Toast.makeText(this, R.string.locUnknow,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.locUnknow, Toast.LENGTH_SHORT)
+						.show();
 				break;
 			}
 
@@ -173,8 +163,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			// requestPolygon();
 			// break;
 			// }
-			
-			
+
 			setsubmitButton();
 			break;
 
@@ -239,12 +228,12 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 		storageDir = new File(Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_PICTURES).getAbsolutePath()
-				+ "/COBWEB/");
+				+ "/" + SFOLDER + "/");
 
 		// Create the storage directory if it does not exist
 		if (!storageDir.exists()) {
 			if (!storageDir.mkdirs()) {
-				Log.d("COBWEB", "failed to create directory");
+				Log.d(SFOLDER, "failed to create directory");
 				return null;
 			}
 		}
@@ -263,18 +252,17 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 			setImage();
-		} else if(requestCode == POLYGON && resultCode == RESULT_OK) {
+		} else if (requestCode == POLYGON && resultCode == RESULT_OK) {
 			setsubmitButton();
-		
-		} else if(requestCode == POLYGON && resultCode == RESULT_CANCELED) {
-				
+
+		} else if (requestCode == POLYGON && resultCode == RESULT_CANCELED) {
+
 			setsubmitButton();
-		}	else if (resultCode == RESULT_CANCELED) {
+		} else if (resultCode == RESULT_CANCELED) {
 			Toast.makeText(this, R.string.photoCancel, Toast.LENGTH_LONG)
 					.show();
 		}
-		
-		
+
 		else {
 			Toast.makeText(this,
 					"SOMETHING HAPPENED!!! PICTURE WAS NOT CAPTURED",
@@ -293,6 +281,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 		bmOptions.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+		pp = photoFile.getAbsolutePath();
 		int photoW = bmOptions.outWidth;
 		int photoH = bmOptions.outHeight;
 
@@ -324,8 +313,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View v, int pos,
 					long id) {
 
-//				Toast.makeText(main, "" + photoPath.get(imageItem.get(pos)),
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(main, "" + photoPath.get(imageItem.get(pos)),
+				// Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -386,110 +375,90 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private void setsubmitButton() {
 
-		
-		
-		
-		
 		submitData.setVelocity(data.getFlowVelocity());
 		submitData.setDepth(data.getFloodDepth());
 		submitData.setType(data.getFloodType());
 		submitData.setNote(data.getNote());
 		submitData.setDate(new Date().toGMTString());
 
-		
-		SharedPreferences prefs = getSharedPreferences("COBWEB", MODE_PRIVATE);
+		SharedPreferences prefs = getSharedPreferences(SFOLDER, MODE_PRIVATE);
 		submitData.setPolygone(prefs.getString("polygon", null));
+
+		System.out.println("polygon " + prefs.getString("polygon", null));
 
 		// Toast.makeText(this, "READY TO SEND \n Polygone :"+
 		// submitData.getPolygon(), Toast.LENGTH_LONG).show();
 
-		 
-		Toast.makeText(this, R.string.database,
-				Toast.LENGTH_LONG).show();
+		Toast.makeText(this, R.string.database, Toast.LENGTH_LONG).show();
 
-		 setData();
 		
+
+		setData();
+
 		this.finish();
 
 	}
 
-	
-	
-	
-	private void setData(){
-		
-		SharedPreferences.Editor editor = getSharedPreferences("COBWEB",MODE_PRIVATE).edit(); 
-    
+	private void setData() {
+
+		SharedPreferences.Editor editor = getSharedPreferences(SFOLDER,
+				MODE_PRIVATE).edit();
+
 		editor.putBoolean("offline", true);
 		editor.putString("Depth", submitData.getDepth());
 		editor.putString("Note", submitData.getNote());
 		editor.putString("Type", submitData.getType());
 		editor.putString("Date", submitData.getDate());
 		editor.putString("Flow", submitData.getVelocity());
-		
-		editor.putFloat("latitude", (float)submitData.getLatitude());
+
+		editor.putFloat("latitude", (float) submitData.getLatitude());
 		editor.putFloat("longitude", (float) submitData.getLongitude());
-    	
-		
-		int size =submitData.getPhotoPaths().size();
+
+		int size = submitData.getPhotoPaths().size();
 		editor.putInt("noOfImage", size);
-		
+
 		Iterator<String> set = submitData.getPhotoPaths().iterator();
-		int i=0;
-		while(set.hasNext()){
-		    
-			editor.putString("photo"+i, set.next());
+		int i = 0;
+		while (set.hasNext()) {
+
+			editor.putString("photo" + i, set.next());
 
 			i++;
-	    }
-		
-		editor.commit();
-    	
-    	
-    		
-		
-		
-	}
-	
+		}
 
-	
-	
+		editor.commit();
+
+	}
+
 	private boolean requestPolygon() {
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				switch (which) {
-				case DialogInterface.BUTTON_POSITIVE:
+				/*
+				 * switch (which) { case DialogInterface.BUTTON_POSITIVE:
+				 */
+				Intent mapintent = new Intent(main, PolygonLayerMap.class);
 
-					Intent mapintent = new Intent(main, PolygonLayerMap.class);
-					
-					
-					startActivityForResult(mapintent, POLYGON);
-					// start for result
-					break;
+				startActivityForResult(mapintent, POLYGON);
+				// start for result
+				/*
+				 * break;
+				 * 
+				 * case DialogInterface.BUTTON_NEGATIVE: // No button clicked //
+				 * Submit everything setsubmitButton(); break; }
+				 */
 
-				case DialogInterface.BUTTON_NEGATIVE:
-					// No button clicked
-					// Submit everything
-					setsubmitButton();
-					break;
-				}
-				
-				
-				
-				
-				
 			}
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(
-				"Do you want to draw a rough polygon sketch of flooding area?")
-				.setPositiveButton("Yes", dialogClickListener)
-				.setNegativeButton("No", dialogClickListener).show()
+		// "Do you want to draw a rough polygon sketch of flooding area?").
+				"Please draw a rough polygon sketch of the flooding area")
+				.setNeutralButton("Ok", dialogClickListener).show()
+				// .setNegativeButton("No", dialogClickListener).show()
 				.setCanceledOnTouchOutside(false);
-		
 
 		askPoly = true;
 		return askPoly;
