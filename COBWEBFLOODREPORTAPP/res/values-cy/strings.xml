@@ -99,7 +99,7 @@
      <string name="adminInfo1"><b>LLEOLIADAU ADMIN gwatwar</b></string>
       <string name="adminInfo2">Gallai lleoliadau eraill yn dod i mewn yma</string>
     <string name="polygonMap"><b>DRAW polygon HYSBYSU</b></string>
-
+  <string name="title_activity_polygon_layer_map">Map Haen polygon</string>
     
     <!-- Admin Page Setting -->
 
@@ -118,9 +118,12 @@
     <string name="locUnknow">  Dim Lluniau ychwanegol</string>
     <string name="photoCancel"> PHOTO WS GANSLO</string>
      <string name="database">  Cronfa Ddata yn dros dro Unavailabe, Data is offline arbed dros dro</string>
+    <string name="noUpload"> Dim ffeiliau iw llwytho i fyny</string>
     
     
-     
+    
+    <string name="title_activity_admin_polygon_map">Gweinyddol Polygon Map </string>
+    <string name="title_activity_main">prif Weithgaredd</string>
      
      
 </resources>

@@ -108,9 +108,7 @@
     <string name="photoCancel"> PHOTO WAS CANCELLED</string>
      <string name="database"> Database is Temporarily Unavailabe, Data is temporary saved offline</string>
     <string name="noUpload"> No files to uplaod</string>
-    
-    
-    
+     
     <string name="title_activity_admin_polygon_map">AdminPolygonMap</string>
     <string name="title_activity_main">MainActivity</string>
 
