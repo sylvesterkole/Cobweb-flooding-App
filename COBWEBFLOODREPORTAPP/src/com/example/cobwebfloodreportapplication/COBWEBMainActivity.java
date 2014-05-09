@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.Properties;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -24,8 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,6 +49,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	private Button helpButton;
 	private String lang;
 	private TextView notice;
+	Context context;
 
 	public final static String FOLDER_LOC = Environment
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -56,6 +60,8 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		context=this;
 		setContentView(R.layout.activity_cobwebmain);
 
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
@@ -226,9 +232,9 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 					// + ".txt";
 					// String file=FOLDER_LOC +"fromPhone2.txt";
 					geoJSON(file);
-					post(file, "application/json", false,fn[0].substring(0, fn[0].length() - 5));
+					post(file, "application/json", false,fn[0].substring(0, fn[0].length() - 5),context);
 
-					post(FOLDER_LOC + fn[0], "image/jpeg", true,fn[0]);
+					post(FOLDER_LOC + fn[0], "image/jpeg", true,fn[0],context);
 
 				}
 			}.start();
@@ -298,7 +304,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 
 	}
 
-	public static void post(final String fn, final String mime, boolean b,String fs) {
+	public static void post(final String fn, final String mime, boolean b,String fs, Context context) {
 
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
@@ -310,12 +316,18 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 			if (b) {
 				hn = hn.substring(0, fs.length() - 5) + ".b64";
 			}
+			
+			Properties properties = new Properties();
+			AssetManager assetManager = context.getAssets();
+			InputStream inputStream = assetManager.open("cobweb_flooding.properties");
+			properties.load(inputStream);
+			
 			HttpPost httppost = new HttpPost(
 
-			"https://fieldtripgb.edina.ac.uk/pcapi/fs/dropbox/NAFz2zD1iPHWWxRm/sixth/"
+			properties.getProperty("pcapiurl")
 					+ hn);
 
-			System.out.println("here");
+			//System.out.println("here");
 
 			File file = new File(fn);
 			;
