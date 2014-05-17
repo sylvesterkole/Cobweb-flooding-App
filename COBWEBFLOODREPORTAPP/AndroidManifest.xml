@@ -5,13 +5,13 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="14"
         android:targetSdkVersion="18" />
-
+ 
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-feature android:name="android.hardware.camera" />
-
+ <uses-feature android:name="android.hardware.camera" />
+ <uses-feature android:name="android.hardware.camera.autofocus" />
+ 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -21,6 +21,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
+  
+ <uses-permission android:name="android.permission.WAKE_LOCK"/> 
+   
 
     <application
         android:allowBackup="true"
@@ -36,6 +39,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+           
+           <activity android:configChanges="keyboardHidden|orientation"
+              android:label="@string/title_CobWebCamera"
+              android:name="cobweb.addons.QualityControlledCamera"
+              android:screenOrientation="landscape"
+              android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+             </activity>
         <activity
             android:name="com.example.cobwebfloodreportapplication.PHOTOActivity"
             android:label="@string/title_activity_photo"
@@ -62,6 +72,7 @@
             android:name="com.example.cobwebfloodreportapplication.PolygonLayerMap"
             android:label="@string/title_activity_polygon_layer_map" >
         </activity>
+       
         <activity
             android:name="com.example.cobwebfloodreportapplication.AdminPolygonMap"
             android:label="@string/title_activity_admin_polygon_map" >

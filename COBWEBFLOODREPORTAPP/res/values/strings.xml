@@ -111,5 +111,10 @@
      
     <string name="title_activity_admin_polygon_map">AdminPolygonMap</string>
     <string name="title_activity_main">MainActivity</string>
+    
+    <string name="title_CobWebCamera">CobWeb Camera</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="green"> </string>
+   <string name="acc_read">COBWEB Camera </string>
 
 </resources>

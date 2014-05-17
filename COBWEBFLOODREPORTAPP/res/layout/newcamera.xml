@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+ 
+
+        <SurfaceView
+            android:id="@+id/livefeed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/takebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/livefeed"
+            android:layout_alignBottom="@+id/livefeed"
+            android:layout_centerHorizontal="true"
+             android:onClick="PressButtonToTakePhoto"  
+            android:text="@string/take_picture" 
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/StatusToTakeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:cropToPadding="false"
+            android:contentDescription="@string/green"
+            android:scaleType="fitXY"
+            android:src="@drawable/green" />
+
+        <TextView
+            android:id="@+id/AccelReadings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/acc_read" />
+
+    </RelativeLayout>
+ 

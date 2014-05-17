@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-
+ 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -129,7 +130,9 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		case R.id.retake_button:
 			if (photoBit != null)
 				addItemsToList();
-			dispatchTakePictureIntent();
+			
+			 controlledTakePictureIntent();
+			// dispatchTakePictureIntent();
 			break;
 		case R.id.add_button:
 			addItemsToList();
@@ -197,6 +200,43 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	}
 
+	/*
+	 * New way of taking an image using a controlled activity 
+	 */
+	
+	private void controlledTakePictureIntent()
+	{
+		  
+		 Intent takePictureIntent = new Intent(PHOTOActivity.this,cobweb.addons.QualityControlledCamera.class);
+		
+		  
+		
+		// Ensure that there's a camera activity to handle the intent
+		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+			// Create the File where the photo should go
+			try {
+				photoFile = createImageFile();
+				// Toast.makeText(this, photoFile.getAbsolutePath() ,
+				// Toast.LENGTH_LONG).show();
+			} catch (IOException ex) {
+				// Error occurred while creating the File
+
+			}
+			// Continue only if the File was successfully created
+			if (photoFile != null) {
+				
+				//puts in file into the intent to get back the image 
+				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+						Uri.fromFile(photoFile));
+				startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+			}
+		}
+	 
+	}
+	
+	/*
+	 * Old way of telling android to go grab a picture for us 
+	 */
 	private void dispatchTakePictureIntent() {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// Ensure that there's a camera activity to handle the intent
@@ -212,6 +252,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			}
 			// Continue only if the File was successfully created
 			if (photoFile != null) {
+				
+				//puts in file into the intent to get back the image 
 				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 						Uri.fromFile(photoFile));
 				startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -271,6 +313,11 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	}
 
+	 
+	 
+	/*
+	 * Old set Image method 
+	 */
 	private void setImage() {
 
 		// Get the dimensions of the View
