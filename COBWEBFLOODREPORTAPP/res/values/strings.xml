@@ -59,16 +59,25 @@
     <string name="note_text"></string>
 
     <string-array name="dialog_type_spinnerText">
-        <item>Flood</item>
-        <item>Severe Flood</item>
+        <item>Debris in River</item>
+        <item>Blocked Drain or Culvert</item>
+        <item>Blocked Bridge</item>
+        <item>High River Levels</item>
+        <item>Waterlogged land</item>
+        <item>Flood water</item>
         <item>Debris</item>
-        <item>Trash line</item>
-    </string-array>
+        <item>Flood Damage</item>
+        <item>Trash/Tide line</item>
+        <item>Land Erosion</item> 
+        <item>Other</item>
+    </string-array> 
+    
     <string-array name="dialog_velo_spinner">
         <item>Stationary</item>
         <item>Fast</item>
         <item>Slow</item>
     </string-array>
+    
     <string-array name="dialog_depth_spinner">
         <item>&lt;1m</item>
         <item>1&#8211;2m</item>
