@@ -44,7 +44,7 @@
     <string name="retake_button"><b>NEW</b></string>
     <string name="delete_button"><b>DELETE</b></string>
     <string name="small_imagesInfoButton"><b>PHOTO GROUPING</b></string>
-    <string name="submit_photo_button"><b>SUBMIT PHOTO</b></string>
+    <string name="submit_photo_button"><b>STORE LOCALLY</b></string>
     <string name="title_activity_map_display"><b>MapDisplay</b></string>
     <string name="title_activity_map">Map</string>
     <string name="hello_world">Hello world!</string>
@@ -112,9 +112,9 @@
     <string name="title_activity_admin_polygon_map">AdminPolygonMap</string>
     <string name="title_activity_main">MainActivity</string>
     
-    <string name="title_CobWebCamera">CobWeb Camera</string>
-    <string name="take_picture">Take Picture</string>
-    <string name="green"> </string>
-   <string name="acc_read">COBWEB Camera </string>
-
+    <!-- - new Strings for Quality controlled Camera -->
+     <string name="green">Warning Light</string>
+     <string name="take_picture">Take Picture</string>
+   <string name="acc_read">COBWEB camera</string>
+ <string name="title_CobWebCamera">COBWEB camera</string>
 </resources>

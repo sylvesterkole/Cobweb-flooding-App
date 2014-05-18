@@ -1,12 +1,14 @@
 package com.example.cobwebfloodreportapplication;
 
-
+import java.util.UUID;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
@@ -34,21 +34,20 @@ public class UserLogInActivity extends Activity {
 	 * TODO: remove after connecting to a real authentication system.
 	 */
 	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"abey@ucd.ie:cobweb", "sylvester@ucd.ie:cobweb", "cobweb@ucd.ie:cobweb"};
-	
+			"abey@ucd.ie:cobweb", "sylvester@ucd.ie:cobweb",
+			"cobweb@ucd.ie:cobweb" };
+
 	public static final String EXTRA_EMAIL = "sylvester.eigbogba@ucdconnect.ie";
 
 	private static final String EXTRA_TEXT = null;
-	
+
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
-	
-
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail="";
+	private String mEmail = "";
 	private String mPassword;
 
 	// UI references.
@@ -59,22 +58,20 @@ public class UserLogInActivity extends Activity {
 	private String caller;
 	private TextView mLoginStatusMessageView;
 
-	
 	private Button skipButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		caller = getIntent().getStringExtra("CALLER");
-		
+
 		setContentView(R.layout.activity_user_log_in);
-		
-		mEmailView=(EditText) findViewById(R.id.email);
-		
-		
+
+		mEmailView = (EditText) findViewById(R.id.email);
+
 		mEmailView.setText(mEmail);
-	
+
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -100,10 +97,9 @@ public class UserLogInActivity extends Activity {
 						attemptLogin();
 					}
 				});
-		
-		
-		skipButton=(Button)findViewById(R.id.skipButton);
-		setSkipButton(); 
+
+		skipButton = (Button) findViewById(R.id.skipButton);
+		setSkipButton();
 	}
 
 	@Override
@@ -113,16 +109,45 @@ public class UserLogInActivity extends Activity {
 		return true;
 	}
 
-	
-	
-	private void setSkipButton(){
-		skipButton.setOnClickListener(new OnClickListener() 
-	    {   public void onClick(View v) 
-	        { setCOBWEBPanel();  }
-	    });
-		
+	private void setSkipButton() {
+		final Context cxt = this;
 
-	   }
+		skipButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+
+				new Thread() {
+					public void run() {
+
+						DatabaseHelper dh = new DatabaseHelper(cxt);
+						// Check for saved ID
+						String userID = dh.selectID();
+
+						if (userID == null) {
+							userID = UUID.randomUUID().toString();
+							dh.insertUser(userID);
+						}
+						
+						
+						SharedPreferences prefs = getSharedPreferences(Constant.SFOLDER,
+								MODE_PRIVATE);
+
+						int nObs = prefs.getInt(Constant.NUMOBS, 0);
+						
+						nObs++;
+						dh.insertObs(nObs, userID);
+						dh.close();
+						SharedPreferences.Editor edit = prefs.edit();
+						edit.putInt(Constant.NUMOBS, nObs);
+						edit.commit();
+						
+
+						setCOBWEBPanel(userID);
+					}
+				}.start();
+			}
+		});
+
+	}
 
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
@@ -181,37 +206,32 @@ public class UserLogInActivity extends Activity {
 			setAdmin();
 		}
 	}
-	
-	
-	
-	
-	
+
 	private void setAdmin() {
 		Intent intent = new Intent(this, AdminSection.class);
 		startActivity(intent);
 		finish();
 	}
-	
 
-	
-	
-	 private void setCOBWEBPanel(){
-		 Intent intent = null;
-		 
-		 if(caller.trim().equals("PHOTOVIEW"))
+	private void setCOBWEBPanel(String userID) {
+
+		Intent intent = null;
+
+		if (caller.trim().equals("PHOTOVIEW")) {
 			intent = new Intent(this, PHOTOActivity.class);
-		
-		 if(caller.trim().equals("MAPVIEW"))
-			 intent = new Intent(this, Map.class);
-	
-		 
-		 startActivity(intent);      
-		 finish();
-	}
-	 
 
-	 
 			
+
+			// Code for determining observation number here
+			// intent.putExtra(USRID, s);
+
+		}
+		if (caller.trim().equals("MAPVIEW"))
+			intent = new Intent(this, Map.class);
+
+		startActivity(intent);
+		finish();
+	}
 
 	/**
 	 * Shows the progress UI and hides the login form.
@@ -289,8 +309,7 @@ public class UserLogInActivity extends Activity {
 
 			if (success) {
 				finish();
-				
-				
+
 			} else {
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
@@ -305,8 +324,4 @@ public class UserLogInActivity extends Activity {
 		}
 	}
 
-
-	}
-
-
-
+}

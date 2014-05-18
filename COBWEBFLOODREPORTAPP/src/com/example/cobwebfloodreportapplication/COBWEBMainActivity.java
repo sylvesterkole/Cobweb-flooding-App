@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -55,13 +56,13 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 			.getAbsolutePath()
 
-			+ "/" + PHOTOActivity.SFOLDER + "/";
+			+ "/" + Constant.SFOLDER + "/";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		context=this;
+
+		context = this;
 		setContentView(R.layout.activity_cobwebmain);
 
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
@@ -82,7 +83,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	private void setClickableButtons() {
 
 		notice = (TextView) findViewById(R.id.warningTextview);
-		SharedPreferences prefs = getSharedPreferences(PHOTOActivity.SFOLDER,
+		SharedPreferences prefs = getSharedPreferences(Constant.SFOLDER,
 				MODE_PRIVATE);
 
 		int visibile = prefs.getInt("warning", View.GONE);
@@ -114,23 +115,22 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 
-		SharedPreferences prefs = getSharedPreferences(PHOTOActivity.SFOLDER,
+		SharedPreferences prefs = getSharedPreferences(Constant.SFOLDER,
 				MODE_PRIVATE);
 		boolean isSignIn = prefs.getBoolean("isSignIn", false);
 
 		switch (v.getId()) {
 
 		case R.id.take_photo_button:
-
+			Intent photo_intent;
 			if (isSignIn) {
-				Intent photo_intent = new Intent(this, PHOTOActivity.class);
-				startActivity(photo_intent);
+				 photo_intent = new Intent(this, PHOTOActivity.class);
+				
 			} else {
-				Intent photo_intent = new Intent(this, UserLogInActivity.class);
-				photo_intent.putExtra("CALLER", "PHOTOVIEW");
-				startActivity(photo_intent);
+				 photo_intent = new Intent(this, UserLogInActivity.class);
+				photo_intent.putExtra("CALLER", "PHOTOVIEW"); 
 			}
-
+			startActivity(photo_intent);
 			break;
 
 		case R.id.flood_map_button:
@@ -150,7 +150,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 			 * sendOfflineData();
 			 */
 
-			postFiles();
+			uploadDB();
 
 			break;
 		case R.id.help_button:
@@ -173,23 +173,58 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 
 	}
 
-	private void sendOfflineData() {
-
-		// TODO
-
-	}
+	/*
+	 * private void sendOfflineData() {
+	 * 
+	 * // TODO
+	 * 
+	 * }
+	 */
 
 	@Override
 	protected void onDestroy() {
 
 		SharedPreferences.Editor editor = getSharedPreferences(
-				PHOTOActivity.SFOLDER, MODE_PRIVATE).edit();
+				Constant.SFOLDER, MODE_PRIVATE).edit();
 		editor.putInt("warning", View.GONE);
 		editor.commit();
 
 		super.onDestroy();
 
 		// option 2: callback after super.onDestroy();
+	}
+
+	void uploadDB() {
+		final Context context = this;
+		new Thread() {
+			public void run() {
+
+				GeoJSONHelper.loadImages(context);
+				DatabaseHelper db = new DatabaseHelper(context);
+
+				Cursor cursor = db.noPolyObs();
+				db.close();
+
+				if (cursor != null)
+					while (!cursor.isAfterLast()) {
+
+						GeoJSONHelper.nPolyObs(cursor);
+
+						cursor.moveToNext();
+					}
+				cursor = db.polyObs();
+				if (cursor != null)
+					while (!cursor.isAfterLast()) {
+
+						GeoJSONHelper.processObsPoly(cursor, db);
+						cursor.moveToNext();
+					}
+
+				db.close();
+				
+				
+			}
+		}.start();
 	}
 
 	private void setLocaleView(String lan) {
@@ -222,7 +257,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				public void run() {
 
 					SharedPreferences prefs = getSharedPreferences(
-							PHOTOActivity.SFOLDER, MODE_PRIVATE);
+							Constant.SFOLDER, MODE_PRIVATE);
 					final String s = prefs.getString("polygon", null);
 
 					// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
@@ -231,10 +266,11 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 							+ fn[0].substring(0, fn[0].length() - 5);
 					// + ".txt";
 					// String file=FOLDER_LOC +"fromPhone2.txt";
-					geoJSON(file);
-					post(file, "application/json", false,fn[0].substring(0, fn[0].length() - 5),context);
+					// GeoJSONHelper.geoJSON(file);
+					post(file, "application/json", false,
+							fn[0].substring(0, fn[0].length() - 5), context);
 
-					post(FOLDER_LOC + fn[0], "image/jpeg", true,fn[0],context);
+					post(FOLDER_LOC + fn[0], "image/jpeg", true, fn[0], context);
 
 				}
 			}.start();
@@ -243,68 +279,8 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 
 	}
 
-	static public String polygonData() {
-		try {
-			JSONObject geo = new JSONObject();
-			JSONObject featureCollection = new JSONObject();
-			featureCollection.put("type", "FeatureCollection");
-			JSONArray featureList = new JSONArray();
-
-			featureCollection.put("features", featureList);
-			JSONObject polygon = new JSONObject();
-			polygon.put("type", "Polygon");
-			JSONArray coord = new JSONArray("[[[" + 1 + "," + 0 + "]" + ",["
-					+ 2 + "," + 0 + "]" + ",[" + 3 + "," + 0 + "],[" + 1 + ","
-					+ 0 + "]]]");
-			polygon.put("coordinates", coord);
-			JSONObject feature = new JSONObject();
-			feature.put("geometry", polygon);
-			feature.put("type", "feature");
-			JSONArray properties = new JSONArray();
-			feature.put("properties", properties);
-			JSONObject type = new JSONObject();
-			type.put("Type", "Flood");
-			JSONObject flow = new JSONObject();
-			flow.put("Flow Velocity", "Stationary");
-			JSONObject depth = new JSONObject();
-			depth.put("Depth Estimate", "<1m");
-			JSONObject note = new JSONObject();
-			note.put("Note", "");
-
-			properties.put(type);
-			properties.put(flow);
-			properties.put(depth);
-			properties.put(note);
-
-			featureList.put(feature);
-			return featureCollection.toString(4);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	static private void geoJSON(String fn) {
-		final File f = new File(fn);
-
-		if (f.exists())
-			f.delete();
-
-		try {
-			f.createNewFile();
-			String s = polygonData();
-			PrintWriter pw = new PrintWriter(new FileOutputStream(f));
-			pw.println(s);
-			pw.flush();
-			pw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void post(final String fn, final String mime, boolean b,String fs, Context context) {
+	public static void post(final String fn, final String mime, boolean b,
+			String fs, Context context) {
 
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
@@ -316,18 +292,18 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 			if (b) {
 				hn = hn.substring(0, fs.length() - 5) + ".b64";
 			}
-			
+
 			Properties properties = new Properties();
 			AssetManager assetManager = context.getAssets();
-			InputStream inputStream = assetManager.open("cobweb_flooding.properties");
+			InputStream inputStream = assetManager
+					.open("cobweb_flooding.properties");
 			properties.load(inputStream);
-			
+
 			HttpPost httppost = new HttpPost(
 
-			properties.getProperty("pcapiurl")
-					+ hn);
+			properties.getProperty("pcapiurl") + hn);
 
-			//System.out.println("here");
+			// System.out.println("here");
 
 			File file = new File(fn);
 			;
@@ -336,13 +312,11 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				byte imageData[] = new byte[(int) file.length()];
 				imageInFile.read(imageData);
 
-				System.out.println("len ------------- "+file.length());
-				
-				
+				System.out.println("len ------------- " + file.length());
+
 				String imageDataString = encode(imageData);
 
-				File f = new File(FOLDER_LOC
-						+ "tmpconvertfile.string");
+				File f = new File(FOLDER_LOC + "tmpconvertfile.string");
 				f.createNewFile();
 				FileOutputStream imageOutFile = new FileOutputStream(f);
 
@@ -383,7 +357,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 			}
 
 			httpclient.getConnectionManager().shutdown();
-			
+
 			file.delete();
 
 		} catch (IOException e) {
@@ -395,7 +369,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	public final static String encode(byte[] d) {
 		if (d == null)
 			return null;
-		
+
 		byte data[] = new byte[d.length + 2];
 		System.arraycopy(d, 0, data, 0, d.length);
 		byte dest[] = new byte[(data.length / 3) * 4];

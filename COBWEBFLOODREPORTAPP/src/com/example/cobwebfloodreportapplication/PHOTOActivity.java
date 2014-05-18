@@ -6,17 +6,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
- 
+import java.util.Set;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,13 +30,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
-import cobweb.databaseObject.Submission;
 
 public class PHOTOActivity extends Activity implements OnClickListener {
-
-	public final static String SFOLDER = "COBWEB";
 
 	private static final int REQUEST_IMAGE_CAPTURE = 100;
 	protected static final int POLYGON = 101;
@@ -49,25 +45,25 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private Button submitImage;
 	private ImageView imageView;
 
-	// private LocationFinder loc;
 	private File storageDir;
 	private ArrayList<Bitmap> imageItem = new ArrayList<Bitmap>();
 	private GridView gridview;
 	private ImageAdapter imageAdapter;
 
-	private Spinner type;
-	private View dialogView;
 	private boolean addInfo = false;
 	private boolean askPoly = false;
 	private DialogueData data;
 	private GPSTracker location;
 	private PHOTOActivity main = this;
-	private Submission submitData;
 
-	String pp;
+	// String pp;
 
-	private HashMap<Bitmap, String> photoPath;
+	private HashMap<String, Bitmap> photoPath;
 	ProgressDialog progress;
+
+	HashMap<String, String> polyLine;
+	String fVel, fDepth, fType, fNote, fDate, polygon;
+	double lat, lon;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +75,10 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		gridview.setAdapter(imageAdapter);
 		setGridView();
 		setClickableButtons();
-		submitData = new Submission();
+		// submitData = new Submission();
 
-		photoPath = new HashMap<Bitmap, String>();
+		polyLine = new HashMap<String, String>();
+		photoPath = new HashMap<String, Bitmap>();
 		location = new GPSTracker(this);
 
 		/*
@@ -130,9 +127,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		case R.id.retake_button:
 			if (photoBit != null)
 				addItemsToList();
-			
-			 controlledTakePictureIntent();
-			// dispatchTakePictureIntent();
+			dispatchTakePictureIntent();
 			break;
 		case R.id.add_button:
 			addItemsToList();
@@ -158,6 +153,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			}
 
 			if (!addInfo) {
+
 				setAttachedInfo();
 				break;
 			}
@@ -200,45 +196,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	}
 
-	/*
-	 * New way of taking an image using a controlled activity 
-	 */
-	
-	private void controlledTakePictureIntent()
-	{
-		  
-		 Intent takePictureIntent = new Intent(PHOTOActivity.this,cobweb.addons.QualityControlledCamera.class);
-		
-		  
-		
-		// Ensure that there's a camera activity to handle the intent
-		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-			// Create the File where the photo should go
-			try {
-				photoFile = createImageFile();
-				// Toast.makeText(this, photoFile.getAbsolutePath() ,
-				// Toast.LENGTH_LONG).show();
-			} catch (IOException ex) {
-				// Error occurred while creating the File
-
-			}
-			// Continue only if the File was successfully created
-			if (photoFile != null) {
-				
-				//puts in file into the intent to get back the image 
-				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-						Uri.fromFile(photoFile));
-				startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-			}
-		}
-	 
-	}
-	
-	/*
-	 * Old way of telling android to go grab a picture for us 
-	 */
 	private void dispatchTakePictureIntent() {
-		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		 Intent takePictureIntent = new Intent(PHOTOActivity.this,cobweb.addons.QualityControlledCamera.class);
 		// Ensure that there's a camera activity to handle the intent
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 			// Create the File where the photo should go
@@ -252,8 +211,6 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			}
 			// Continue only if the File was successfully created
 			if (photoFile != null) {
-				
-				//puts in file into the intent to get back the image 
 				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 						Uri.fromFile(photoFile));
 				startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -270,12 +227,12 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 		storageDir = new File(Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_PICTURES).getAbsolutePath()
-				+ "/" + SFOLDER + "/");
+				+ "/" + Constant.SFOLDER + "/");
 
 		// Create the storage directory if it does not exist
 		if (!storageDir.exists()) {
 			if (!storageDir.mkdirs()) {
-				Log.d(SFOLDER, "failed to create directory");
+				Log.d(Constant.SFOLDER, "failed to create directory");
 				return null;
 			}
 		}
@@ -288,6 +245,10 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		imageFile = File.createTempFile("IMG_" + timeStamp, ".png", storageDir);
 
 		return imageFile;
+	}
+
+	void addPolyLine(String path, String line) {
+		polyLine.put(path, line);
 	}
 
 	@Override
@@ -313,11 +274,6 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	}
 
-	 
-	 
-	/*
-	 * Old set Image method 
-	 */
 	private void setImage() {
 
 		// Get the dimensions of the View
@@ -328,7 +284,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 		bmOptions.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-		pp = photoFile.getAbsolutePath();
+		// pp = photoFile.getAbsolutePath();
 		int photoW = bmOptions.outWidth;
 		int photoH = bmOptions.outHeight;
 
@@ -344,14 +300,10 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				bmOptions);
 		imageView.setImageBitmap(bitmap);
 		photoBit = bitmap;
-		setPhotoPaths(bitmap, photoFile.getAbsolutePath());
+		String path = photoFile.getAbsolutePath();
+		if (!photoPath.containsKey(path))
+			photoPath.put(path, bitmap);
 
-	}
-
-	private void setPhotoPaths(Bitmap bitmap, String path) {
-
-		if (!photoPath.containsKey(bitmap))
-			photoPath.put(bitmap, path);
 	}
 
 	private void setGridView() {
@@ -394,6 +346,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				imageItem.remove(temp);
 			}
 		}
+		
 
 		imageAdapter.notifyDataSetChanged();
 
@@ -401,7 +354,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private void showNextItemsOnList() {
 		addItemsToList();
-		if (!imageItem.isEmpty() && imageItem.size() > 1) {
+		if ( imageItem.size() > 1) {
 			int i = imageItem.indexOf(photoBit);
 			if (i < (imageItem.size() - 1)) {
 				photoBit = imageItem.get(++i);
@@ -422,58 +375,59 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private void setsubmitButton() {
 
-		submitData.setVelocity(data.getFlowVelocity());
-		submitData.setDepth(data.getFloodDepth());
-		submitData.setType(data.getFloodType());
-		submitData.setNote(data.getNote());
-		submitData.setDate(new Date().toGMTString());
+		// fVel,fDepth,fType,fNote,fDate;
+		fVel = data.getFlowVelocity();
+		fDepth = data.getFloodDepth();
+		fType = data.getFloodType();
+		fNote = data.getNote();
+		fDate = new Date().toGMTString();
 
-		SharedPreferences prefs = getSharedPreferences(SFOLDER, MODE_PRIVATE);
-		submitData.setPolygone(prefs.getString("polygon", null));
+		SharedPreferences prefs = getSharedPreferences(Constant.SFOLDER,
+				MODE_PRIVATE);
+		polygon = prefs.getString(Constant.POLYPR, null);
 
-		System.out.println("polygon " + prefs.getString("polygon", null));
+		// System.out.println("polygon " + prefs.getString("polygon", null));
 
 		// Toast.makeText(this, "READY TO SEND \n Polygone :"+
 		// submitData.getPolygon(), Toast.LENGTH_LONG).show();
 
-		Toast.makeText(this, R.string.database, Toast.LENGTH_LONG).show();
-
-		
+		// Toast.makeText(this, R.string.database, Toast.LENGTH_LONG).show();
 
 		setData();
 
+		imageItem.clear();
+		imageAdapter.notifyDataSetChanged();
 		this.finish();
 
 	}
 
 	private void setData() {
 
-		SharedPreferences.Editor editor = getSharedPreferences(SFOLDER,
-				MODE_PRIVATE).edit();
+		final Set<String> phPath = photoPath.keySet();
 
-		editor.putBoolean("offline", true);
-		editor.putString("Depth", submitData.getDepth());
-		editor.putString("Note", submitData.getNote());
-		editor.putString("Type", submitData.getType());
-		editor.putString("Date", submitData.getDate());
-		editor.putString("Flow", submitData.getVelocity());
+		SharedPreferences prefs = getSharedPreferences(Constant.SFOLDER,
+				MODE_PRIVATE);
 
-		editor.putFloat("latitude", (float) submitData.getLatitude());
-		editor.putFloat("longitude", (float) submitData.getLongitude());
+		final int oid = prefs.getInt(Constant.NUMOBS, 0);
+		
+		final Context context = this;
+		new Thread() {
+			public void run() {
 
-		int size = submitData.getPhotoPaths().size();
-		editor.putInt("noOfImage", size);
+				DatabaseHelper db = new DatabaseHelper(context);
+				for (String s : phPath) {
+					String line = polyLine.get(s);
+					if (line == null)
+						db.insertImageTable(s, oid);
+					else
+						db.insertImagePoly(s, oid, line);
+				}
 
-		Iterator<String> set = submitData.getPhotoPaths().iterator();
-		int i = 0;
-		while (set.hasNext()) {
-
-			editor.putString("photo" + i, set.next());
-
-			i++;
-		}
-
-		editor.commit();
+				db.updateMetaObs(oid, fDepth, fNote, fType, fDate, fVel, lat,
+						lon, polygon);
+				db.close();
+			}
+		}.start();
 
 	}
 
@@ -521,7 +475,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 			return false;
 		}
-		submitData.setlocation(location.getLatitude(), location.getLongitude());
+		lat = location.getLatitude();
+		lon = location.getLongitude();
 
 		return true;
 	}
@@ -531,12 +486,6 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		if (imageItem.isEmpty())
 			return false;
 
-		for (int i = 0; i < imageItem.size(); i++) {
-
-			Bitmap bit = imageItem.get(i);
-			String temp = photoPath.get(bit);
-			submitData.addPhoto(temp, bit);
-		}
 		return true;
 
 	}
