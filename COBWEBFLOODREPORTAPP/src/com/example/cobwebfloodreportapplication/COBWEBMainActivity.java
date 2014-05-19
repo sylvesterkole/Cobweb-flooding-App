@@ -1,15 +1,38 @@
 package com.example.cobwebfloodreportapplication;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.Properties;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,9 +52,11 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	private TextView notice;
 	Context context;
 
-	boolean flag = true;
+	public final static String FOLDER_LOC = Environment
+			.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+			.getAbsolutePath()
 
-	Handler handler;
+			+ "/" + Constant.SFOLDER + "/";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,58 +65,12 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		context = this;
 		setContentView(R.layout.activity_cobwebmain);
 
-		handler = new Handler();
-
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 		lang = prefs.getString("lang", null);
 		if (lang != null)
 			setLocaleView(lang);
 
 		setClickableButtons();
-
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		final Context context = this;
-		new Thread() {
-			public void run() {
-				DatabaseHelper db = new DatabaseHelper(context);
-				Cursor cursor = db.noPolyObs();
-				if (cursor == null) {
-					cursor = db.polyObs();
-					if (cursor == null) {
-						
-						handler.post(new Runnable() {
-							public void run() {
-								buttonChange(oofflineButton);
-							}
-						});
-						db.close();
-						return;
-					}
-				}
-				db.close();
-				flag = true;
-				
-
-				handler.post(new Runnable() {
-					public void run() {
-						oofflineButton.setText(R.string.offline_button);
-						Toast.makeText(context, R.string.availText,
-								Toast.LENGTH_LONG).show();
-					}
-				});
-
-			}
-		}.start();
-	}
-
-	private void buttonChange(Button b) {
-
-		flag = false;
-		b.setText(R.string.noObs);
 	}
 
 	@Override
@@ -145,13 +124,12 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		case R.id.take_photo_button:
 			Intent photo_intent;
 			if (isSignIn) {
-				photo_intent = new Intent(this, PHOTOActivity.class);
-
+				 photo_intent = new Intent(this, PHOTOActivity.class);
+				
 			} else {
-				photo_intent = new Intent(this, UserLogInActivity.class);
-				photo_intent.putExtra("CALLER", "PHOTOVIEW");
+				 photo_intent = new Intent(this, UserLogInActivity.class);
+				photo_intent.putExtra("CALLER", "PHOTOVIEW"); 
 			}
-			// startActivityForResult(photo_intent,PHOTOR);
 			startActivity(photo_intent);
 			break;
 
@@ -172,11 +150,8 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 			 * sendOfflineData();
 			 */
 
-			if (flag)
-				uploadDB();
-			else
-				Toast.makeText(this, R.string.requestUpload, Toast.LENGTH_LONG)
-						.show();
+			uploadDB();
+
 			break;
 		case R.id.help_button:
 			Toast.makeText(this, R.string.helpMsg, Toast.LENGTH_LONG).show();
@@ -212,7 +187,6 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		SharedPreferences.Editor editor = getSharedPreferences(
 				Constant.SFOLDER, MODE_PRIVATE).edit();
 		editor.putInt("warning", View.GONE);
-
 		editor.commit();
 
 		super.onDestroy();
@@ -229,11 +203,12 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				DatabaseHelper db = new DatabaseHelper(context);
 
 				Cursor cursor = db.noPolyObs();
+				db.close();
 
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						GeoJSONHelper.nPolyObs(cursor, context);
+						GeoJSONHelper.nPolyObs(cursor);
 
 						cursor.moveToNext();
 					}
@@ -241,21 +216,13 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						GeoJSONHelper.processObsPoly(cursor, db, context);
+						GeoJSONHelper.processObsPoly(cursor, db);
 						cursor.moveToNext();
 					}
 
-				db.deleteTables();
-				// buttonChange(oofflineButton);
 				db.close();
-				handler.post(new Runnable() {
-
-					public void run() {
-						Toast.makeText(context, R.string.uploadText,
-								Toast.LENGTH_LONG).show();
-					}
-				});
-
+				
+				
 			}
 		}.start();
 	}
@@ -274,6 +241,173 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 		editor.putString("lang", lan);
 		editor.commit();
+	}
+
+	public void postFiles() {
+
+		File storageDir = new File(FOLDER_LOC);
+		final String[] fn = storageDir.list();
+		// final String[]fn={"fromphone.txt"};
+		if (fn == null || fn.length == 0)
+			Toast.makeText(this, R.string.noUpload, Toast.LENGTH_LONG).show();
+		else {
+
+			Toast.makeText(this, fn[0], Toast.LENGTH_LONG).show();
+			new Thread() {
+				public void run() {
+
+					SharedPreferences prefs = getSharedPreferences(
+							Constant.SFOLDER, MODE_PRIVATE);
+					final String s = prefs.getString("polygon", null);
+
+					// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+
+					String file = FOLDER_LOC
+							+ fn[0].substring(0, fn[0].length() - 5);
+					// + ".txt";
+					// String file=FOLDER_LOC +"fromPhone2.txt";
+					// GeoJSONHelper.geoJSON(file);
+					post(file, "application/json", false,
+							fn[0].substring(0, fn[0].length() - 5), context);
+
+					post(FOLDER_LOC + fn[0], "image/jpeg", true, fn[0], context);
+
+				}
+			}.start();
+
+		}
+
+	}
+
+	public static void post(final String fn, final String mime, boolean b,
+			String fs, Context context) {
+
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			httpclient.getParams().setParameter(
+
+			CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+
+			String hn = fs;
+			if (b) {
+				hn = hn.substring(0, fs.length() - 5) + ".b64";
+			}
+
+			Properties properties = new Properties();
+			AssetManager assetManager = context.getAssets();
+			InputStream inputStream = assetManager
+					.open("cobweb_flooding.properties");
+			properties.load(inputStream);
+
+			HttpPost httppost = new HttpPost(
+
+			properties.getProperty("pcapiurl") + hn);
+
+			// System.out.println("here");
+
+			File file = new File(fn);
+			;
+			if (b) {
+				FileInputStream imageInFile = new FileInputStream(file);
+				byte imageData[] = new byte[(int) file.length()];
+				imageInFile.read(imageData);
+
+				System.out.println("len ------------- " + file.length());
+
+				String imageDataString = encode(imageData);
+
+				File f = new File(FOLDER_LOC + "tmpconvertfile.string");
+				f.createNewFile();
+				FileOutputStream imageOutFile = new FileOutputStream(f);
+
+				PrintWriter pw = new PrintWriter(imageOutFile);
+				pw.println(imageDataString);
+
+				pw.flush();
+				pw.close();
+
+				imageInFile.close();
+				imageOutFile.close();
+				file.delete();
+				file = f;
+			}
+
+			MultipartEntity mpEntity = new MultipartEntity();
+			// ContentBody cbFile = new FileBody(file, "plain/text");
+			ContentBody cbFile = new FileBody(file, mime);
+			mpEntity.addPart("userfile", cbFile);
+
+			httppost.setEntity(mpEntity);
+
+			System.out
+					.println("executing request " + httppost.getRequestLine());
+
+			if (b) {
+				httppost.setHeader("C2ontent-Transfer-Encoding", "base64");
+			}
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity resEntity = response.getEntity();
+
+			System.out.println(response.getStatusLine());
+			if (resEntity != null) {
+				System.out.println(EntityUtils.toString(resEntity));
+			}
+			if (resEntity != null) {
+				resEntity.consumeContent();
+			}
+
+			httpclient.getConnectionManager().shutdown();
+
+			file.delete();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public final static String encode(byte[] d) {
+		if (d == null)
+			return null;
+
+		byte data[] = new byte[d.length + 2];
+		System.arraycopy(d, 0, data, 0, d.length);
+		byte dest[] = new byte[(data.length / 3) * 4];
+
+		// 3-byte to 4-byte conversion
+		for (int sidx = 0, didx = 0; sidx < d.length; sidx += 3, didx += 4) {
+			dest[didx] = (byte) ((data[sidx] >>> 2) & 077);
+			dest[didx + 1] = (byte) ((data[sidx + 1] >>> 4) & 017 | (data[sidx] << 4) & 077);
+			dest[didx + 2] = (byte) ((data[sidx + 2] >>> 6) & 003 | (data[sidx + 1] << 2) & 077);
+			dest[didx + 3] = (byte) (data[sidx + 2] & 077);
+		}
+
+		// 0-63 to ascii printable conversion
+		for (int idx = 0; idx < dest.length; idx++) {
+			if (dest[idx] < 26)
+				dest[idx] = (byte) (dest[idx] + 'A');
+			else if (dest[idx] < 52)
+				dest[idx] = (byte) (dest[idx] + 'a' - 26);
+			else if (dest[idx] < 62)
+				dest[idx] = (byte) (dest[idx] + '0' - 52);
+			else if (dest[idx] < 63)
+				dest[idx] = (byte) '+';
+			else
+				dest[idx] = (byte) '/';
+		}
+
+		// add padding
+		for (int idx = dest.length - 1; idx > (d.length * 4) / 3; idx--) {
+			dest[idx] = (byte) '=';
+		}
+		return new String(dest);
+	}
+
+	/**
+	 * Encode a String using Base64 using the default platform encoding
+	 **/
+	public final static String encode(String s) {
+		return encode(s.getBytes());
 	}
 
 }
