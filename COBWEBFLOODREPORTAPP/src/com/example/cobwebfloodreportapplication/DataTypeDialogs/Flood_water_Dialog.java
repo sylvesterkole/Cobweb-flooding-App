@@ -1,6 +1,9 @@
-package com.example.cobwebfloodreportapplication;
+package com.example.cobwebfloodreportapplication.DataTypeDialogs;
 
 
+
+import com.example.cobwebfloodreportapplication.DialogueData;
+import com.example.cobwebfloodreportapplication.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,7 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 
-public class ImageDescriptionDialog implements OnItemSelectedListener{
+public class Flood_water_Dialog implements OnItemSelectedListener{
 	
 
 	private Spinner type,flow,depth;
@@ -31,7 +34,7 @@ public class ImageDescriptionDialog implements OnItemSelectedListener{
 		return data;
 	}
  
-	public ImageDescriptionDialog(Activity act){
+	public Flood_water_Dialog(Activity act){
 		activity=act;
 		data=new DialogueData();
 		showDiaglog();
@@ -56,7 +59,7 @@ private void showDiaglog(){
 	    // Pass null as the parent view because its going in the dialog layout
 	    builder.setView(dialogView)
 	    
-	    .setTitle("Flood Additional Information")
+	    .setTitle(R.string.flood_additional_information)
 	    // Add action buttons
 	           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	        	   

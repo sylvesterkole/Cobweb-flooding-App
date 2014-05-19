@@ -256,7 +256,11 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 			   }else
 			   {
 				   TakeButton = (Button)findViewById(R.id.takebutton); 
-				   TakeButton.setVisibility(Button.INVISIBLE);
+				   
+				    if ( TakeButton!=null)
+				    {
+				   TakeButton.setVisibility(Button.INVISIBLE); // crashing for some reasome
+				    }
 			   }
 	    	 }
 	    	 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/AreaOfMarkedImage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <RelativeLayout  
+    android:id="@+id/SurfaceAreaOfMarkedImage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+     </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/green"
+            android:background="@android:color/transparent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@android:drawable/alert_dark_frame" />
+
+        <Button
+            android:id="@+id/MarkImageHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:onClick="PressButtonToStorePoints"
+            android:text="@string/exit"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/MarkerForFlood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#006600"
+            android:textColor="#CCFF00"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/clickonwater" 
+             android:visibility="visible" 
+             />
+
+    </RelativeLayout>
+ 

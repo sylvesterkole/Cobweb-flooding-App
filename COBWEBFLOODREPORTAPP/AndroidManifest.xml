@@ -46,6 +46,23 @@
               android:screenOrientation="landscape"
               android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
              </activity>
+             
+           <activity android:configChanges="keyboardHidden|orientation"
+              android:label="@string/title_CobWebCamera"
+              android:name="cobweb.addons.MarkItemOfInterestOnImage"
+              android:screenOrientation="landscape"
+              android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+             </activity>
+             
+           
+           
+             <activity android:configChanges="keyboardHidden|orientation"
+              android:label="@string/title_CobWebCamera"
+              android:name="cobweb.addons.PolylineOnImage"
+              android:screenOrientation="landscape"
+              android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+             </activity>
+              
         <activity
             android:name="com.example.cobwebfloodreportapplication.PHOTOActivity"
             android:label="@string/title_activity_photo"
