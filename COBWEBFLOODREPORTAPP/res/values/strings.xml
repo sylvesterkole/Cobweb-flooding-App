@@ -72,13 +72,6 @@
         <item>Other</item>
     </string-array> 
     
-    <string-array name="dialog_pretype_spinnerText">
-        <item>Pre-Flood</item>
-        <item>Flooding</item>
-        <item>Post-Flood</item>
-        <item>Other</item> 
-    </string-array> 
-     
     <string-array name="dialog_velo_spinner">
         <item>Stationary</item>
         <item>Fast</item>
@@ -111,8 +104,12 @@
     <string name="photoPreview">Photo Preview</string>
     
     
-    
+    <string name="uploadText">Data Uploaded</string>
+    <string name="availText">Data available for upload</string>
+    <string name="noObs">No Observations</string>
+    <string name="requestUpload">Please make an observation</string>
 
+    
     <!-- In code Messages   String values -->
 
     <string name="serverMsg"> Server is not available at this time</string>
@@ -129,30 +126,8 @@
     <string name="title_activity_main">MainActivity</string>
     
     <!-- - new Strings for Quality controlled Camera -->
-     <string name="green">Warning Light</string>  
-     <string name="take_picture">Take Picture</string>   
-   <string name="acc_read">COBWEB camera</string>         
- <string name="title_CobWebCamera">COBWEB camera</string>  
-   
- <string name="pleasedrawapolygon">Please mark on the map by drawing a rough polygon around Waterlogged land</string>  
-    
-<string name="nature_of_observation">Nature of Observation </string>  
-
-
-<string name="Observation">Observation</string>
-
-<string name="flood_additional_information">flood additional information </string>  
-
-<string name="highriver">How close to over topping ?</string>   
-
-<string name="flood_damage"> Description of Flood Damage </string>
-
- <!-- Convert to welsh below   -->
-<string name="exit">Exit </string>
-<string name="watermarked">Marked the centre of the water</string>
-<string name="waterLine">Press two points on the picture to draw the edge of the water line</string>
-<string name="clickonwater">Click on the centre of the water </string>
-<string name="polyline">You have drawn the edge of the water </string>
-<string name="dialog_pretype">Type :</string>
-
+     <string name="green">Warning Light</string>
+     <string name="take_picture">Take Picture</string>
+   <string name="acc_read">COBWEB camera</string>
+ <string name="title_CobWebCamera">COBWEB camera</string>
 </resources>

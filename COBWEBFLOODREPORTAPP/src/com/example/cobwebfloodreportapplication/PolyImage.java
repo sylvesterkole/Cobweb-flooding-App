@@ -23,7 +23,7 @@ public class PolyImage {
 	public JSONObject polylObj(String prop) throws JSONException {
 		JSONObject pl = GeoJSONHelper.polygonPolyline(polyline, MPOINT);
 		JSONObject flN = new JSONObject();
-		flN.put(FNAME, file);
+		flN.put(FNAME, GeoJSONHelper.b64FileName(file));
 
 		JSONArray lProp = new JSONArray();
 		lProp.put(flN);
