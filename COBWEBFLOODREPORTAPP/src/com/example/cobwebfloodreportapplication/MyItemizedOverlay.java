@@ -94,7 +94,7 @@ public class MyItemizedOverlay extends ItemizedOverlay<OverlayItem> {
  public boolean onSingleTapConfirmed(MotionEvent e, MapView mapView) {
 
      Projection proj = mapView.getProjection();
-     GeoPoint p = (GeoPoint) proj.fromPixels((int) e.getX(), (int) e.getY());
+     GeoPoint p = (GeoPoint) proj.fromPixels((int) e.getX(), (int) e.getY()); // we could use this for the polyline alternativly 
       proj = mapView.getProjection();
       GeoPoint loc = (GeoPoint) proj.fromPixels((int) e.getX(), (int) e.getY());
       String longitude = Double
