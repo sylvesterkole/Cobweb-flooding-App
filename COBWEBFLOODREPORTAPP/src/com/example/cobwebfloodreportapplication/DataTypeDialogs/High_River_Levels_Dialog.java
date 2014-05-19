@@ -70,7 +70,7 @@ private void showDiaglog(){
 	        		   
 	               }
 	           })
-	    		.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+	    		.setNegativeButton("", new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialog, int id) {
 	                   //LoginDialogFragment.this.getDialog().cancel();	             
 	            	   }

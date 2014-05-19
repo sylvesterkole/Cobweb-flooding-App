@@ -12,6 +12,7 @@ import com.example.cobwebfloodreportapplication.DataTypeDialogs.Flood_Damage_Dia
 import com.example.cobwebfloodreportapplication.DataTypeDialogs.High_River_Levels_Dialog;
 import com.example.cobwebfloodreportapplication.DataTypeDialogs.InitialDialog;
 import com.example.cobwebfloodreportapplication.DataTypeDialogs.Notes_Dialog;
+import com.example.cobwebfloodreportapplication.DataTypeDialogs.PreInitialDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -60,6 +61,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private boolean askPoly = false;
 	private DialogueData data;
 	private DialogueData type_data;
+	private DialogueData Overal_type_data;
 	private GPSTracker location;
 	private PHOTOActivity main = this;
 	private  String MarkedPositon = ""; 
@@ -94,7 +96,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		 * Start initial dialog to get type 
 		 */
 		
-		SetupInitalData_type(); 
+		SetupInitialData_type(); 
 		
 		
 		/*
@@ -284,26 +286,49 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		
 	}
 	
-	private void SetupInitalData_type() {
+	private void SetupInitialData_type() {
 
 		// intitial Type to start the flow 
+		
+
 		  
-	final InitialDialog openingdialog = new InitialDialog(this);
+		final InitialDialog openingdialog = new InitialDialog(this);
+			
+			
+			type_data = openingdialog.getData();
+			 
+			new Thread(new Runnable() {
+				public void run() {
+					while (!openingdialog.isSetDialog())
+						;
+	 
+					type_data = openingdialog.getData();
+
+					 
+				}
+			}).start();
+			
+			
+			
+		final PreInitialDialog preInitialDialog = new PreInitialDialog(this);
 		
 		
-		type_data = openingdialog.getData();
+		Overal_type_data = preInitialDialog.getData();
 		
 
 		new Thread(new Runnable() {
 			public void run() {
-				while (!openingdialog.isSetDialog())
+				while (!preInitialDialog.isSetDialog())
 					;
  
-				type_data = openingdialog.getData();
+				Overal_type_data =preInitialDialog.getData();
 
 				 
 			}
 		}).start();
+
+		
+		
 
 	}
 
@@ -384,7 +409,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 					.show();
 		} else if (resultCode == MARKERPLACEDONIMAGE)
 		{
-			Toast.makeText(this, R.string.watermarked, Toast.LENGTH_LONG)
+			Toast.makeText(this, R.string.watermarked, Toast.LENGTH_SHORT)
 			.show();
 			
 		//	 MarkedPositon = data.getStringExtra("MarkedArea");
@@ -403,8 +428,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		}else if (resultCode == POLYLINEDRAWNONIMAGE)
 
 		{
-			//LinePositon = data.getStringExtra("LinePostion");
-			
+			//LinePositon = data.getStringExtra("LinePostion"); 
 			Toast.makeText(this, R.string.polyline, Toast.LENGTH_LONG)
 			.show();
 		}
@@ -451,6 +475,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		 */
 		if((type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)  )
 		{
+			/*
 			 Intent MarkImage = new Intent(PHOTOActivity.this,cobweb.addons.MarkItemOfInterestOnImage.class);
 		    
 			if (photoFile != null) {
@@ -459,9 +484,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				startActivityForResult(MarkImage, REQUEST_IMAGE_CAPTURE);
 			}
 			
-			
-				
-			
+			*/
+				 
 		}
 
 	}
@@ -584,6 +608,9 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				}
 				
 				fNote = fNote + MarkedPositon + LinePositon;
+				
+				fType = Overal_type_data + ":" + fType;
+				 
 				db.updateMetaObs(oid, fDepth, fNote, fType, fDate, fVel, lat,
 						lon, polygon);
 				db.close();
@@ -594,6 +621,14 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private boolean requestPolygon() {
 
+		
+		//check if waterlogged to ask for polgygon  
+		
+		if((type_data.getFloodType().compareTo("Waterlogged land")== 0) || (type_data.getFloodType().compareTo("tir llawn dwr")==0)  ) 
+		{
+		
+		 
+		
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -609,8 +644,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				 * 
 				 * case DialogInterface.BUTTON_NEGATIVE: // No button clicked //
 				 * Submit everything setsubmitButton(); break; }
-				 */
-
+				 */ 
 			}
 		};
 
@@ -621,7 +655,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				.setNeutralButton("Ok", dialogClickListener).show()
 				// .setNegativeButton("No", dialogClickListener).show()
 				.setCanceledOnTouchOutside(false);
-
+ 
+		}
 		askPoly = true;
 		return askPoly;
 	}

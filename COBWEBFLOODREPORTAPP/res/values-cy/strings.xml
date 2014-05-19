@@ -63,7 +63,7 @@
         <item>Drain neu Cwlfert blocio</item>
         <item>Bridge blocio</item>
         <item>Lefelau Afonydd Uchel</item>
-        <item>tir llawn dŵr</item>
+        <item>tir llawn dwr</item>
         <item>dwr llifogydd</item>
         <item>Darnau</item>
         <item>Difrod llifogydd</item>
@@ -135,8 +135,8 @@
     <string name="title_activity_admin_polygon_map">Gweinyddol Polygon Map </string>
     <string name="title_activity_main">prif Weithgaredd</string>
     
-      <string name="pleasedrawapolygon">Os gwelwch yn dda nodi ar y map drwy dynnu polygon garw aorund maes arsylwi</string>
-     
+      
+     <string name="pleasedrawapolygon">Os gwelwch yn dda nodi ar y map drwy dynnu polygon garw o amgylch tir dŵr wedi mewngofnodi</string> 
            <string name="green">Rhybudd Ysgafn</string>   
      <string name="take_picture">Cymerwch Llun</string>  
    <string name="acc_read">COBWEB camera</string>          
@@ -157,5 +157,13 @@
 <string name="clickonwater">Click on the centre of the water </string>
 <string name="polyline">You have drawn the edge of the water </string>
 
+ <string-array name="dialog_pretype_spinnerText">
+        <item>Pre-Flood</item>
+        <item>Flooding</item>
+        <item>Post-Flood</item>
+        <item>Other</item> 
+    </string-array> 
+    
+ <string name="dialog_pretype">Type :</string>
 
 </resources>

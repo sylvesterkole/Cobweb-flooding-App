@@ -127,9 +127,7 @@ public class MarkItemOfInterestOnImage extends Activity implements OnTouchListen
 			putPictureInToBeMarked.setImageBitmap(bitmap); 
 			 
 		}
-	 
-	 
-	 
+	  
 	 private void PressButtonToStorePoints(View v)
 	 {
 		setResult(MARKERPLACEDONIMAGE);
@@ -144,7 +142,7 @@ public class MarkItemOfInterestOnImage extends Activity implements OnTouchListen
 		Log.d("Touching","MyMarker"); 
 		x = (int) arg1.getRawX() ;
 		y = (int) arg1.getRawY();
-		preview.DrawPoint( x,y);
+		preview.DrawPoint(x,y);
 		SubmitPoints.setVisibility(Button.VISIBLE);
 		return false;
 	}

@@ -229,7 +229,7 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	   
 	  private void CheckIfRight(float x,float y, float z)
 	     {
-	    	 if(x <10 && x>8 && y<1 && y>-1 && z< 1 && z> -1  )
+	    	 if(x <11 && x>7 && y<2 && y>-2 && z< 2 && z> -2  ) // weaking 
 	    	 {
 	    		 OkayToTakePhoto=true;
 	    			   Drawable GreenAfter = getResources().getDrawable(R.drawable.green);

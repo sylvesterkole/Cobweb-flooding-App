@@ -72,6 +72,13 @@
         <item>Other</item>
     </string-array> 
     
+    <string-array name="dialog_pretype_spinnerText">
+        <item>Pre-Flood</item>
+        <item>Flooding</item>
+        <item>Post-Flood</item>
+        <item>Other</item> 
+    </string-array> 
+     
     <string-array name="dialog_velo_spinner">
         <item>Stationary</item>
         <item>Fast</item>
@@ -127,8 +134,8 @@
    <string name="acc_read">COBWEB camera</string>         
  <string name="title_CobWebCamera">COBWEB camera</string>  
    
- <string name="pleasedrawapolygon">Please mark on the map by drawing a rough polygon around the area of observation</string>  
-  
+ <string name="pleasedrawapolygon">Please mark on the map by drawing a rough polygon around Waterlogged land</string>  
+    
 <string name="nature_of_observation">Nature of Observation </string>  
 
 
@@ -146,5 +153,6 @@
 <string name="waterLine">Press two points on the picture to draw the edge of the water line</string>
 <string name="clickonwater">Click on the centre of the water </string>
 <string name="polyline">You have drawn the edge of the water </string>
+<string name="dialog_pretype">Type :</string>
 
 </resources>

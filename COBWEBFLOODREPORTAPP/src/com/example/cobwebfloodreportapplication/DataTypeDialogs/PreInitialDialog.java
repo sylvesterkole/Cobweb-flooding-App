@@ -17,12 +17,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 
-public class Flood_Damage_Dialog {
+public class PreInitialDialog implements OnItemSelectedListener{
 	
- 
+
+	private Spinner type,flow,depth;
 	private boolean setDialog= false;
 	private EditText text;
-	private EditText text2;
 	
 	private Activity activity;
 	
@@ -34,40 +34,35 @@ public class Flood_Damage_Dialog {
 		return data;
 	}
  
-	public  Flood_Damage_Dialog(Activity act){
+	public PreInitialDialog(Activity act){
 		activity=act;
 		data=new DialogueData();
 		showDiaglog();
 	}
-	 
+	
+	  
 	public boolean isSetDialog() {
 		return setDialog;
 	}
+
  
 private void showDiaglog(){
 			
 		builder = new AlertDialog.Builder(activity);
 	    // Get the layout inflater
 		LayoutInflater inflater = activity.getLayoutInflater();
-	    dialogView = inflater.inflate(R.layout.flood_damage_dialog, null);
+	    dialogView = inflater.inflate(R.layout.pre_initial_dialog, null);
 	    
 	    // Pass null as the parent view because its going in the dialog layout
 	    builder.setView(dialogView)
 	    
-	    .setTitle(R.string.Observation)
+	    .setTitle(R.string.nature_of_observation)
 	    // Add action buttons
 	           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	        	   
 	        	   @Override
 	               public void onClick(DialogInterface dialog, int id) {
-	        		   
-	        		   setDialog=true;
-	        		   text=(EditText) dialogView.findViewById(R.id.note_text);
-	        		      
-	        		   text2=(EditText) dialogView.findViewById(R.id.flood_damage_text);
-	        		   
-	        		   data.setNote(text.getEditableText().toString() + text2.getEditableText().toString());
-	        		   
+	        		   setDialog=true; 
 	               }
 	           })
 	    		.setNegativeButton("", new DialogInterface.OnClickListener() {
@@ -75,9 +70,66 @@ private void showDiaglog(){
 	                   //LoginDialogFragment.this.getDialog().cancel();	             
 	            	   }
 	           }); 	   
-	      
+	    
+	    
+	    
 	    builder.show().setCanceledOnTouchOutside(false);
-	     
+	   
+	    
+	    setDropDownLists();
+	   
 	}
+	
+	
+	
+	private void setDropDownLists(){
+		
+		
+		type = (Spinner) dialogView.findViewById(R.id.dialog_pretype_spinner);	
 	 
+		
+		 // Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> type_adapter = ArrayAdapter.createFromResource(activity,R.array.dialog_pretype_spinnerText, android.R.layout.simple_spinner_item);
+	   	
+		type_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 
+		type.setOnItemSelectedListener(this);
+	 
+		//Apply the adapter to the spinner
+	    type.setAdapter(type_adapter);
+	     
+		  
+//		
+		
+	
+}
+
+	
+	    @Override 
+	    public void onItemSelected(AdapterView<?> parent, View view, 
+	            int pos, long id) {
+	    	
+	    		switch (parent.getId()) {  
+	    		case R.id.dialog_type_spinner:  
+	    			data.setFloodType(parent.getItemAtPosition(pos).toString());
+	    			break;  
+	    	  
+	    		}  
+
+	    	
+	    }
+	        // An item was selected. You can retrieve the selected item using
+	        // parent.getItemAtPosition(pos)
+	    
+
+	    public void onNothingSelected(AdapterView<?> parent) {
+	        // Another interface callback
+	    }
+
+
+
+
+	
+	
+
 }
