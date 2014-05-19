@@ -150,8 +150,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(OBSTABLE, col, POLYGON + " IS " + nVal
 				+ "NULL", null, null, null, null);
-		if(!cursor.moveToFirst())return null;
-		
+		if (!cursor.moveToFirst())
+			return null;
 
 		return cursor;
 	}
@@ -159,32 +159,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private Cursor imgSel(String nVal, String[] col) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(IMAGETABLE, col, POLYLINE + " IS " + nVal
-				+ "NULL", null, null, null,
-				null);
-		if(!cursor.moveToFirst())return null;
+				+ "NULL", null, null, null, null);
+		if (!cursor.moveToFirst())
+			return null;
 		return cursor;
 	}
 
+	public void deleteTables(){
+		SQLiteDatabase db = this.getReadableDatabase();
+		db.delete(OBSTABLE, null, null);
+		db.delete(IMAGETABLE, null, null);
+	}
 	public Cursor noPolyObs() {
 
 		return obsSel("", new String[] { OID, LAT, LON, DATE, TIME, TYPE,
-				DEPTH, FLOWV, NOTE });
+				DEPTH, FLOWV, NOTE, USERID });
 	}
 
 	public Cursor polyObs() {
 
 		return obsSel("NOT ", new String[] { OID, LAT, LON, DATE, TIME, TYPE,
-				DEPTH, FLOWV, NOTE, POLYGON });
+				DEPTH, FLOWV, NOTE, USERID, POLYGON });
 	}
 
 	public Cursor noLineImage() {
 
-		return imgSel("", new String[] { OID,FILELOC });
+		return imgSel("", new String[] { OID, FILELOC });
 	}
 
 	public Cursor lineImage() {
 
-		return imgSel("NOT ", new String[] {OID, FILELOC, POLYLINE });
+		return imgSel("NOT ", new String[] { OID, FILELOC, POLYLINE });
 	}
 
 	long insertImage(ContentValues cVal, String loc, int obsID) {
@@ -306,7 +311,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		if (!cur.moveToFirst())
 			return null;
 
-		
 		String id = cur.getString(0);
 		db.close();
 		return id;
