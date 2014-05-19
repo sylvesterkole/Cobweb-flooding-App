@@ -155,10 +155,12 @@
 <string name="polyline">You have drawn the edge of the water </string>
 <string name="dialog_pretype">Type :</string>
 
+
 <string name="uploadText">Data Uploaded</string>
     <string name="availText">Data available for upload</string>
     <string name="noObs">No Observations</string>
     <string name="requestUpload">Please make an observation</string>
     
+
 
 </resources>
