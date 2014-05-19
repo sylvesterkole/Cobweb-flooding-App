@@ -66,19 +66,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		// InsertDepts(db);
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	private void drop(SQLiteDatabase db){
 		String dife = "DROP TABLE IF EXISTS ";
-		db.execSQL(dife + USERTABLE);
+		
 		db.execSQL(dife + IMAGETABLE);
 		// db.execSQL(dife + deviceTable);
 		// db.execSQL(dife + zoneTable);
 		db.execSQL(dife + OBSTABLE);
+	}
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		
+		db.execSQL("DROP TABLE IF EXISTS " + USERTABLE);
+		
+		drop(db);
 
 		onCreate(db);
 
 	}
 
+	private void createObsImage(SQLiteDatabase db){
+		db.execSQL("CREATE TABLE " + IMAGETABLE + "(" + IMAGEID
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + POLYLINE
+				+ "  TEXT, " + FILELOC + " TEXT NOT NULL, " + OID
+				+ " INTEGER NOT NULL ,FOREIGN KEY (" + OID
+				+ ") REFERENCES " + OBSTABLE + " (" + OID + "));");
+
+		db.execSQL("CREATE TABLE " + OBSTABLE + "(" + TYPE + " TEXT, "
+				+ FLOWV + " TEXT, " + DEPTH + " TEXT, " + NOTE + " TEXT, "
+				+ OID + " INTEGER PRIMARY KEY," + LAT + " REAL, " + LON
+				+ " REAL, " + DATE + " TEXT, " + TIME + " TEXT, " + FORMAT
+				+ " TEXT, " + FLASH + " TEXT, " + FSTOP + " TEXT, " + ISO
+				+ " TEXT, " + POLYGON + " TEXT, " + USERID
+				+ " TEXT NOT NULL);");
+	}
 	private void createTables(SQLiteDatabase db) {
 
 		try {
@@ -87,19 +108,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					+ " TEXT , " + RANK + " TEXT, " + EMAIL + " TEXT, "
 					+ PASSWORD + " TEXT);");
 
-			db.execSQL("CREATE TABLE " + IMAGETABLE + "(" + IMAGEID
-					+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + POLYLINE
-					+ "  TEXT, " + FILELOC + " TEXT NOT NULL, " + OID
-					+ " INTEGER NOT NULL ,FOREIGN KEY (" + OID
-					+ ") REFERENCES " + OBSTABLE + " (" + OID + "));");
-
-			db.execSQL("CREATE TABLE " + OBSTABLE + "(" + TYPE + " TEXT, "
-					+ FLOWV + " TEXT, " + DEPTH + " TEXT, " + NOTE + " TEXT, "
-					+ OID + " INTEGER PRIMARY KEY," + LAT + " REAL, " + LON
-					+ " REAL, " + DATE + " TEXT, " + TIME + " TEXT, " + FORMAT
-					+ " TEXT, " + FLASH + " TEXT, " + FSTOP + " TEXT, " + ISO
-					+ " TEXT, " + POLYGON + " TEXT, " + USERID
-					+ " TEXT NOT NULL);");
+			createObsImage(db);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,8 +176,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public void deleteTables(){
 		SQLiteDatabase db = this.getReadableDatabase();
-		db.delete(OBSTABLE, null, null);
-		db.delete(IMAGETABLE, null, null);
+		drop(db);
+		createObsImage(db);
 	}
 	public Cursor noPolyObs() {
 

@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 public class GeoJSONHelper {
@@ -113,7 +114,7 @@ public class GeoJSONHelper {
 		db.close();
 	}
 
-	static public void nPolyObs(Cursor cursor, Context context) {
+	static public boolean nPolyObs(Cursor cursor, Context context) {
 
 		try {
 
@@ -129,7 +130,7 @@ public class GeoJSONHelper {
 			if (features.length() == 0) {
 				properties.put(gpsProp);
 				point.put(PROP, properties); // Send point
-				sendGeoJSON(point.toString(4), geoJFN(cursor), context);
+				return sendGeoJSON(point.toString(4), geoJFN(cursor), context);
 			} else {
 				JSONArray pProp = new JSONArray();
 				pProp.put(gpsProp);
@@ -141,11 +142,12 @@ public class GeoJSONHelper {
 				featureCollection.put(FEATURES, features);
 				featureCollection.put(PROP, properties);
 
-				sendGeoJSON(features.toString(4), geoJFN(cursor), context);
+				return sendGeoJSON(features.toString(4), geoJFN(cursor), context);
 			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 	}
@@ -154,7 +156,7 @@ public class GeoJSONHelper {
 		return FOLDER_LOC + cursor.getString(9) + cursor.getInt(0) + GEOJEX;
 	}
 
-	static public void processObsPoly(Cursor cursor, DatabaseHelper db,
+	static public boolean processObsPoly(Cursor cursor, DatabaseHelper db,
 			Context context) {
 
 		try {
@@ -183,15 +185,16 @@ public class GeoJSONHelper {
 			features.put(polygon);
 
 			// Send feature collection
-			sendGeoJSON(features.toString(4), geoJFN(cursor), context);
+			return sendGeoJSON(features.toString(4), geoJFN(cursor), context);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 	}
 
-	static private void sendGeoJSON(String jsonString, String fn,
+	static private boolean sendGeoJSON(String jsonString, String fn,
 			Context context) throws JSONException {
 
 		try {
@@ -203,11 +206,12 @@ public class GeoJSONHelper {
 			pw.print(jsonString);
 			pw.flush();
 			pw.close();
-			post(fn, "application/json", false,
+			return post(fn, "application/json", false,
 					fn.substring(fn.lastIndexOf('/') + 1), context);
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 	}
@@ -367,7 +371,7 @@ public class GeoJSONHelper {
 
 	}
 
-	private static void post(final String fn, final String mime, boolean b,
+	private static boolean post(final String fn, final String mime, boolean b,
 			String fs, Context context) {
 
 		try {
@@ -376,6 +380,7 @@ public class GeoJSONHelper {
 
 			CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
+			Log.d(fn, "posting to "+fs);
 			String hn = fs;
 			if (b) {
 				hn = hn.substring(0, fs.length() - 5) + B64EX;
@@ -448,8 +453,10 @@ public class GeoJSONHelper {
 
 			file.delete();
 
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 	}

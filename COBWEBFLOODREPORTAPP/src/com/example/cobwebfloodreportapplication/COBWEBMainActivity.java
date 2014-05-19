@@ -28,6 +28,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	private String lang;
 	private TextView notice;
 	Context context;
+	private boolean currentlyuploading=false;
 
 	boolean flag = true;
 
@@ -224,7 +225,13 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		final Context context = this;
 		new Thread() {
 			public void run() {
-
+				
+				if(currentlyuploading)
+				{
+					return;
+				}
+				currentlyuploading=true;
+				
 				GeoJSONHelper.loadImages(context);
 				DatabaseHelper db = new DatabaseHelper(context);
 
@@ -233,7 +240,11 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						GeoJSONHelper.nPolyObs(cursor, context);
+						if(!GeoJSONHelper.nPolyObs(cursor, context)){
+							noConn();
+							
+							return;
+						}
 
 						cursor.moveToNext();
 					}
@@ -241,18 +252,23 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						GeoJSONHelper.processObsPoly(cursor, db, context);
+						if(!GeoJSONHelper.processObsPoly(cursor, db, context)){
+							noConn();
+							return;
+						}
 						cursor.moveToNext();
 					}
 
 				db.deleteTables();
-				// buttonChange(oofflineButton);
+				
 				db.close();
 				handler.post(new Runnable() {
 
 					public void run() {
 						Toast.makeText(context, R.string.uploadText,
 								Toast.LENGTH_LONG).show();
+						buttonChange(oofflineButton);
+						currentlyuploading=false;
 					}
 				});
 
@@ -260,6 +276,16 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		}.start();
 	}
 
+	private void noConn(){
+		handler.post(new Runnable() {
+
+			public void run() {
+				Toast.makeText(context, R.string.noConnection,
+						Toast.LENGTH_LONG).show();
+				
+			}
+		});
+	}
 	private void setLocaleView(String lan) {
 		Locale mLocale = new Locale(lan);
 		Locale.setDefault(mLocale);

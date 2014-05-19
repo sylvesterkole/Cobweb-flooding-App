@@ -171,7 +171,6 @@
     <string name="availText">Data ar gael ar gyfer llwytho i fyny</string>
     <string name="noObs">Dim Sylwadau</string>
     <string name="requestUpload">Gwnewch sylw</string>
-    
-    
-
+    <string name="noConnection">No connection</string>
+     
 </resources>
