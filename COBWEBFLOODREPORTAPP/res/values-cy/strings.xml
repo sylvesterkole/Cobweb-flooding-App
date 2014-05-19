@@ -59,16 +59,26 @@
     <string name="note_text"></string>
 
     <string-array name="dialog_type_spinnerText">
-        <item>Flood</item>
-        <item>Severe Flood</item>
-        <item>Debris</item>
-        <item>Trash line</item>
-    </string-array>
+        <item>Malurion yn yr Afon</item>
+        <item>Drain neu Cwlfert blocio</item>
+        <item>Bridge blocio</item>
+        <item>Lefelau Afonydd Uchel</item>
+        <item>tir llawn dwr</item>
+        <item>dwr llifogydd</item>
+        <item>Darnau</item>
+        <item>Difrod llifogydd</item>
+        <item>Llinell Sbwriel / Llanw</item>
+        <item>Erydiad tir</item> 
+        <item>arall</item>
+    </string-array> 
+    
     <string-array name="dialog_velo_spinner">
         <item>Stationary</item>
-        <item>Fast</item>
-        <item>Slow</item>
+        <item>cyflym</item>
+        <item>araf</item>
     </string-array>
+    
+     
     <string-array name="dialog_depth_spinner">
         <item>&lt;1m</item>
         <item>1&#8211;2m</item>
@@ -103,12 +113,9 @@
     
     <!-- Admin Page Setting -->
 
-    <string name="photoPreview">Photo Rhagolwg</string>
+    <string name="photoPreview">Photo Preview</string>
     
-    <string name="uploadText">Uploaded Data</string>
-    <string name="availText">Data ar gael ar gyfer llwytho i fyny</string>
-    <string name="noObs">Dim Sylwadau</string>
-    <string name="requestUpload">Gwnewch sylw</string>
+    
     
 
     <!-- In code Messages   String values -->
@@ -123,13 +130,47 @@
      <string name="database">  Cronfa Ddata yn dros dro Unavailabe, Data is offline arbed dros dro</string>
     <string name="noUpload"> Dim ffeiliau iw llwytho i fyny</string>
     
-    <string name="green">Warning Light</string>
-     <string name="take_picture">Take Picture</string>
-   <string name="acc_read">COBWEB camera</string>
- <string name="title_CobWebCamera">COBWEB camera</string>
+    
     
     <string name="title_activity_admin_polygon_map">Gweinyddol Polygon Map </string>
     <string name="title_activity_main">prif Weithgaredd</string>
-     
-     
+    
+      
+     <string name="pleasedrawapolygon">Os gwelwch yn dda nodi ar y map drwy dynnu polygon garw o amgylch tir dŵr wedi mewngofnodi</string> 
+           <string name="green">Rhybudd Ysgafn</string>   
+     <string name="take_picture">Cymerwch Llun</string>  
+   <string name="acc_read">COBWEB camera</string>          
+ <string name="title_CobWebCamera">COBWEB camera</string>  
+  <string name="Observation">arsylwi</string>
+ <string name="nature_of_observation">Natur y Arsylwi </string>  
+
+<string name="flood_additional_information">llifogydd gwybodaeth ychwanegol </string>   
+ 
+ <string name="highriver">Pa mor agos i dros ychwanegu?</string>  
+  
+<string name="flood_damage"> Disgrifiad or Difrod Llifogydd </string>
+ 
+ <!-- Convert to welsh below   -->
+<string name="exit">Exit </string>
+<string name="watermarked">Marked the centre of the water</string>
+<string name="waterLine">Press two points on the picture to draw the edge of the water line</string>
+<string name="clickonwater">Click on the centre of the water </string>
+<string name="polyline">You have drawn the edge of the water </string>
+
+ <string-array name="dialog_pretype_spinnerText">
+        <item>Pre-Flood</item>
+        <item>Flooding</item>
+        <item>Post-Flood</item>
+        <item>Other</item> 
+    </string-array> 
+    
+ <string name="dialog_pretype">Type :</string>
+ 
+  <string name="uploadText">Uploaded Data</string>
+    <string name="availText">Data ar gael ar gyfer llwytho i fyny</string>
+    <string name="noObs">Dim Sylwadau</string>
+    <string name="requestUpload">Gwnewch sylw</string>
+    
+    
+
 </resources>
