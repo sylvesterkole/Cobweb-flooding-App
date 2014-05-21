@@ -10,6 +10,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Sensor;
@@ -20,6 +21,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -38,6 +40,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import com.example.cobwebfloodreportapplication.R;
  
@@ -77,6 +80,9 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	private Uri LocationForPhoto; 				 // Location where the photo should be stored 
 	private boolean WaitForPhotoToBeStored=true; // once the photo is taken , don't allow any other photo's to be taken. 
 	private boolean TimeOut=false; 				 //if autofocus takes too long and times out 
+	  
+	
+	private Camera.Parameters CameraInfo;
 	 
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +96,8 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	  //  Log.d( "grabbed location" ,"MyCamera");
 	  //  Log.d( LocationForPhoto.toString(),"MyCamera");
 	  setupSensors();
-	     
+	   
+	   
 	  }
 	  
 	  @Override
@@ -227,8 +234,14 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	  }	   
 	  }
 	   
+	  
+	  
 	  private void CheckIfRight(float x,float y, float z)
 	     {
+		  
+
+	    	
+		  
 	    	 if(x <11 && x>7 && y<2 && y>-2 && z< 2 && z> -2  ) // weaking 
 	    	 {
 	    		 OkayToTakePhoto=true;
@@ -263,12 +276,14 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 				    }
 			   }
 	    	 }
+	    	  
+				 
 	    	 
 	     }
 			   
 	  private void initPreview(int width, int height) {
 		  Camera.Parameters parameters=camera.getParameters();
-		  
+		//  CameraInfo = parameters;
 		  /*
 		   * Setup for preview screen
 		   */
@@ -295,7 +310,10 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	         
 			  Camera.Size BestPicture = getBestFullPhotoSize( parameters);  
 			  parameters.setPictureSize(BestPicture.width, BestPicture.height); 
-			 // parameters.setPictureFormat(ImageFormat.YUY2); // if needed to change the format of the image 
+			 // parameters.setPictureFormat(ImageFormat.YUY2); // if needed to change the format of the image
+			 		 	 	 
+				   Log.d("Tried to set new CameraMod", "MyCamera");
+				   
 	          camera.setParameters(parameters); 
 	          cameraConfigured=true;
 	        }
@@ -331,8 +349,7 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 			   }
 		   }
 	   };
-			   
-			   
+			    
 		/*
 		 * Storing as .png but really its already been through jpeg compression, we would have to go hardware native to access raw image so that something we need to think about in the future . 	   
 		 */
@@ -440,8 +457,8 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 			 CheckIfRight(Accel_Readings[0],Accel_Readings[1],Accel_Readings[2]);
 				
 			} 
-
-				
+          
+       
 			
 		}
 		
@@ -474,6 +491,7 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 			    if (android.os.Build.VERSION.SDK_INT< android.os.Build.VERSION_CODES.HONEYCOMB) {
 			    	 previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 			    	} 
+			 
 		}
 		
 		private void setupUI()
@@ -483,9 +501,10 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 			  StatusToTakeImage = (ImageView)findViewById(R.id.StatusToTakeImage);
 			  TextButton = (TextView)findViewById(R.id.AccelReadings);
 		}
+		
+	 
 		 
-	}
-
+}
 
 /*
 

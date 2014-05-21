@@ -31,8 +31,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:onClick="PressButtonToStorePoints"
-            android:text="@string/exit"
-            android:visibility="invisible" />
+            android:text="@string/Submit"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/PolyForFlood"
@@ -46,6 +46,16 @@
             android:text="@string/waterLine" 
              android:visibility="visible" 
              />
+
+        <Button
+            android:id="@+id/Reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/PolyImageHere"
+            android:onClick="PressButtonToReset"
+            android:text="@string/Reset"
+            android:visibility="visible" />
 
     </RelativeLayout>
  

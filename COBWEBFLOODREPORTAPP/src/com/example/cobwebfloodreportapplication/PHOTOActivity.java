@@ -395,8 +395,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			//call activity to mark the image here
 			
 			//call activity to generate a polyline here
-			
-			
+			 
 			
 		} else if (requestCode == POLYGON && resultCode == RESULT_OK) {
 			setsubmitButton();
@@ -409,22 +408,23 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 					.show();
 		} else if (resultCode == MARKERPLACEDONIMAGE)
 		{
-			Toast.makeText(this, R.string.watermarked, Toast.LENGTH_SHORT)
-			.show();
+		//	Toast.makeText(this, R.string.watermarked, Toast.LENGTH_SHORT)
+		//	.show();
 			
 		//	 MarkedPositon = data.getStringExtra("MarkedArea");
 			
-		 	 Intent LineImage = new Intent(PHOTOActivity.this,cobweb.addons.PolylineOnImage.class);
+		 	
 			 
 		 	 
 		 	 Log.d("test","myApp");
-		 	 
+		 	if((type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)) {
+		 		 Intent LineImage = new Intent(PHOTOActivity.this,cobweb.addons.PolylineOnImage.class);
 		 	 if (photoFile != null) {
 					LineImage.putExtra(MediaStore.EXTRA_OUTPUT,
 							Uri.fromFile(photoFile));
 					startActivityForResult(LineImage, REQUEST_IMAGE_CAPTURE);
 				}
-			
+		 	}
 		}else if (resultCode == POLYLINEDRAWNONIMAGE)
 
 		{
@@ -471,11 +471,16 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 			photoPath.put(path, bitmap);
 		
 		/*
-		 * We have gotten image so now to add on a polyline or polypoint 
+		 * We have gotten image so now to marker
 		 */
-		if((type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)  )
+		if((type_data.getFloodType().compareTo("Debris in River")== 0) || (type_data.getFloodType().compareTo("Malurion yn yr Afon")==0) ||
+			(type_data.getFloodType().compareTo("Blocked Drain or Culvert")== 0) || (type_data.getFloodType().compareTo("Drain neu Cwlfert blocio")==0) ||
+			(type_data.getFloodType().compareTo("Blocked Bridge")== 0) || (type_data.getFloodType().compareTo("Bridge blocio")==0) ||
+			(type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)||
+			(type_data.getFloodType().compareTo("Debris")== 0) || (type_data.getFloodType().compareTo("Darnau")==0))
+				 
 		{
-			/*
+			 
 			 Intent MarkImage = new Intent(PHOTOActivity.this,cobweb.addons.MarkItemOfInterestOnImage.class);
 		    
 			if (photoFile != null) {
@@ -483,10 +488,20 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 						Uri.fromFile(photoFile));
 				startActivityForResult(MarkImage, REQUEST_IMAGE_CAPTURE);
 			}
+			// if just polyline needed
+		}else if ((type_data.getFloodType().compareTo("Trash/Tide line")== 0) || (type_data.getFloodType().compareTo("Llinell Sbwriel / Llanw")==0) ||
+				(type_data.getFloodType().compareTo("Land Erosion")== 0) || (type_data.getFloodType().compareTo("Erydiad tir")==0)) 
+				{
+			Intent LineImage = new Intent(PHOTOActivity.this,cobweb.addons.PolylineOnImage.class);
+		 	 if (photoFile != null) {
+					LineImage.putExtra(MediaStore.EXTRA_OUTPUT,
+							Uri.fromFile(photoFile));
+					startActivityForResult(LineImage, REQUEST_IMAGE_CAPTURE);
+				}
 			
-			*/
-				 
-		}
+			
+				}
+		
 
 	}
 
