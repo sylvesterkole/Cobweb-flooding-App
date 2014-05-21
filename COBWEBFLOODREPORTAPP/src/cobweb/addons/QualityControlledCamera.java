@@ -238,15 +238,27 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	  
 	  private void CheckIfRight(float x,float y, float z)
 	     {
+		 // TextButton.setText(Float.toString(x) + "::::::::::::::"+Float.toString(y) + "::::::::::::::"+ Float.toString(z));
+		//   x  9.8 to 0 = 90 degrees 
+		  float AngleOfPhone=  90.f -  (float)  (90 * (x/9.8));
 		  
-
-	    	
-		  
-	    	 if(x <11 && x>7 && y<2 && y>-2 && z< 2 && z> -2  ) // weaking 
+		  if (z <0)
+		  {
+			  AngleOfPhone= -AngleOfPhone;
+		  }
+			  
+		 // TextButton.setText(Float.toString(x) + "::::::::::::::"+Float.toString(y) + "::::::::::::::"+ Float.toString(z));
+				  
+		//   TextButton.setText(" Angle of Phone = " + Float.toString(AngleOfPhone));
+		 // TextButton.setText(" Y value  = " + Float.toString(AngleOfPhone));
+		   
+	    	// old check if(x <11 && x>7 && y<2 && y>-2 && z< 2 && z> -2  ) // weaking 
+		   if(AngleOfPhone<91 && AngleOfPhone>-1)
 	    	 {
 	    		 OkayToTakePhoto=true;
 	    			   Drawable GreenAfter = getResources().getDrawable(R.drawable.green);
 	    			   StatusToTakeImage.setImageDrawable(GreenAfter);
+	    			   
 	    			   if( TakeButton!=null)
 	    			   {
 	    			   TakeButton.setVisibility(Button.VISIBLE);
@@ -255,8 +267,7 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 	    				   TakeButton = (Button)findViewById(R.id.takebutton); 
 	    				   TakeButton.setVisibility(Button.VISIBLE);
 	    			   }
-	    		 
-	    		 
+	    		  
 	    	 }else
 	    	 {
 	    		 OkayToTakePhoto=false;

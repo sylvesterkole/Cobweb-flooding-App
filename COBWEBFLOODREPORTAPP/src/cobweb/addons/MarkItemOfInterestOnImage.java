@@ -70,6 +70,7 @@ public class MarkItemOfInterestOnImage extends Activity implements OnTouchListen
 			  
 			  preview.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
 			  
+			  preview.setAlpha(0.5f);
 			  MainPage.addView(preview);
 			  
 				
@@ -115,7 +116,10 @@ public class MarkItemOfInterestOnImage extends Activity implements OnTouchListen
 						"SOMETHING HAPPENED!!! PICTURE did not load correctly, your phone is not compatible with the Cobweb Mark item plugin  ",
 						Toast.LENGTH_LONG).show();
 			}
+			
+			
 			putPictureInToBeMarked.setImageBitmap(bitmap); 
+			putPictureInToBeMarked.setAlpha(0.5f);
  
 		}
 	  

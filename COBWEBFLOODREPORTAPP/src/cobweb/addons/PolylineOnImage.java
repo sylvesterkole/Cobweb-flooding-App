@@ -81,6 +81,8 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 			  
 			  preview.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
 			  
+			  preview.setAlpha(0.5f);
+			  
 			  MainPage.addView(preview);
 			  
 			  for(int i=0;i<400;i++)
@@ -166,6 +168,9 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 			
 			
 			putPictureInToBeMarked.setImageBitmap(bitmap); 
+			
+			 putPictureInToBeMarked.setAlpha(0.5f); //put on top then alpha it 
+			 
 			 
 		}
 	  
