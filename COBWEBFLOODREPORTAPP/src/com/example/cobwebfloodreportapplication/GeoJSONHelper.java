@@ -115,6 +115,8 @@ public class GeoJSONHelper {
 		// System.out.println("images loaded");
 		db.close();
 	}
+	
+	
 
 	static public boolean nPolyObs(Cursor cursor, Context context) {
 

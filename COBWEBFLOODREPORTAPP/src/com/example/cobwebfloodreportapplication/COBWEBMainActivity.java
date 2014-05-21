@@ -80,22 +80,22 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 						return;
 					}
 				}
-				// if (db.imageAvailable()) {
-				db.close();
-				flag = true;
+				if (db.imageAvailable()) {
+					db.close();
+					flag = true;
 
-				handler.post(new Runnable() {
-					public void run() {
-						oofflineButton.setText(R.string.offline_button);
-						Toast.makeText(context, R.string.availText,
-								Toast.LENGTH_LONG).show();
-					}
-				});
-				/*}else{
+					handler.post(new Runnable() {
+						public void run() {
+							oofflineButton.setText(R.string.offline_button);
+							Toast.makeText(context, R.string.availText,
+									Toast.LENGTH_LONG).show();
+						}
+					});
+				} else {
 					db.deleteTables();
 					noData();
 					db.close();
-				}*/
+				}
 
 			}
 		}.start();
@@ -263,8 +263,6 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 					return;
 				}
 
-				
-
 				currentlyuploading = true;
 				handler.post(new Runnable() {
 					public void run() {
@@ -293,7 +291,8 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 						cursor.moveToNext();
 					}
 
-				Log.d("imagedata",""+db.imageAvailable());
+				// Log.d("imagedata",""+db.imageAvailable());
+				// Log.d("imagedata",""+GeoJSONHelper.imageSize());
 				db.deleteTables();
 
 				db.close();

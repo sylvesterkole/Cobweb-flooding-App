@@ -590,8 +590,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 		setData();
 
-		imageItem.clear();
-		photoPath.clear();
+		
 		imageAdapter.notifyDataSetChanged();
 		this.finish();
 
@@ -627,6 +626,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				db.updateMetaObs(oid, fDepth, fNote, fType, fDate, fVel, lat,
 						lon, polygon);
 				db.close();
+				imageItem.clear();
+				photoPath.clear();
 			}
 		}.start();
 
