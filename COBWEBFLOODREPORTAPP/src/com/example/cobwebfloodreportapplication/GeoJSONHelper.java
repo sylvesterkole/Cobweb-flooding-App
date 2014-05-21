@@ -344,7 +344,7 @@ public class GeoJSONHelper {
 		arr.put(jo);
 
 	}
-
+/*
 	public void postFiles(int mode, final Context context) {
 
 		File storageDir = new File(FOLDER_LOC);
@@ -376,7 +376,7 @@ public class GeoJSONHelper {
 
 		}
 
-	}
+	}*/
 
 	private static boolean post(final String fn, final String mime, boolean b,
 			String fs, Context context) {
@@ -391,6 +391,8 @@ public class GeoJSONHelper {
 			String hn = fs;
 			if (b) {
 				hn = hn.substring(0, fs.length() - 5) + B64EX;
+			}else{
+				Log.d("geo file",hn);
 			}
 
 			Properties properties = new Properties();
