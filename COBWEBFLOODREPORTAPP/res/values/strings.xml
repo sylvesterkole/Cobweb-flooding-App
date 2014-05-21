@@ -149,9 +149,9 @@
 
  <!-- Convert to welsh below   -->
 <string name="exit">Exit </string>
-<string name="watermarked">Marked the centre of the water</string>
-<string name="waterLine">Press two points on the picture to draw the edge of the water line</string>
-<string name="clickonwater">Click on the centre of the water </string>
+<string name="watermarked">Marked the centre of the observation </string>
+<string name="waterLine">Draw the edge of the Water or Trash or Land erosion line</string>
+<string name="clickonwater">Click on the centre of the observation or Water area </string>
 <string name="polyline">You have drawn the edge of the water </string>
 <string name="dialog_pretype">Type :</string>
 
@@ -161,6 +161,9 @@
     <string name="noObs">No Observations</string>
     <string name="requestUpload">Please make an observation</string>
     <string name="noConnection">No connection available</string>
+    
+     <string name="Reset">Reset</string>
+      <string name="Submit">Submit</string>
     
 
 

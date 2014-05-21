@@ -9,8 +9,10 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -51,7 +53,7 @@ public class GeoJSONHelper {
 
 	// Properties Point
 	private final static String LOC = "Location";
-	private final static String LOCVAL = "GPS Corrdinates";
+	private final static String LOCVAL = "GPS Coordinates";
 
 	// Properties General
 	private final static String TFLOOD = "Flood Type";
@@ -70,8 +72,8 @@ public class GeoJSONHelper {
 	private static String FSTRING = "File name ";
 	private static String GEOJEX = ".geoj";
 
-	private static HashMap<Integer, List<String>> image = new HashMap<Integer, List<String>>();
-	private static HashMap<Integer, List<PolyImage>> polImage = new HashMap<Integer, List<PolyImage>>();
+	private static HashMap<Integer, Set<String>> image = new HashMap<Integer, Set<String>>();
+	private static HashMap<Integer, Set<PolyImage>> polImage = new HashMap<Integer, Set<PolyImage>>();
 
 	static public void loadImages(Context context) {
 
@@ -82,9 +84,9 @@ public class GeoJSONHelper {
 
 				int oid = cur.getInt(0);
 				String fn = cur.getString(1);
-				List<String> list = image.get(oid);
+				Set<String> list = image.get(oid);
 				if (list == null) {
-					list = new ArrayList<String>();
+					list = new HashSet<String>();
 					image.put(oid, list);
 				}
 				list.add(fn);
@@ -98,9 +100,9 @@ public class GeoJSONHelper {
 
 				int oid = cur.getInt(0);
 				String fn = cur.getString(1);
-				List<PolyImage> list = polImage.get(oid);
+				Set<PolyImage> list = polImage.get(oid);
 				if (list == null) {
-					list = new ArrayList<PolyImage>();
+					list = new HashSet<PolyImage>();
 					polImage.put(oid, list);
 				}
 
@@ -129,7 +131,8 @@ public class GeoJSONHelper {
 
 			if (features.length() == 0) {
 				properties.put(gpsProp);
-				point.put(PROP, properties); // Send point
+				point.put(PROP, properties);
+				// Send point
 				return sendGeoJSON(point.toString(4), geoJFN(cursor), context);
 			} else {
 				JSONArray pProp = new JSONArray();
@@ -220,7 +223,7 @@ public class GeoJSONHelper {
 			Context context) throws JSONException {
 		int oid = cursor.getInt(0);
 
-		List<String> img = image.get(oid);
+		Set<String> img = image.get(oid);
 
 		int cnt = 0;
 		if (img != null)
@@ -235,7 +238,7 @@ public class GeoJSONHelper {
 
 			}
 
-		List<PolyImage> pi = polImage.get(oid);
+		Set<PolyImage> pi = polImage.get(oid);
 
 		JSONArray features = new JSONArray();
 
@@ -318,7 +321,9 @@ public class GeoJSONHelper {
 		JSONObject point = new JSONObject();
 
 		point.put(TYPE, POINT);
-		point.put(COORD, '[' + lat + ',' + lon + ']');
+		
+		point.put(COORD, "[" + lat + ',' + lon + ']');
+		
 		feature.put(GEOMETRY, point);
 		return feature;
 
@@ -497,14 +502,7 @@ public class GeoJSONHelper {
 		}
 		return new String(dest);
 	}
-
-	/**
-	 * Encode a String using Base64 using the default platform encoding
-	 **/
-	private final static String encode(String s) {
-		return encode(s.getBytes());
-	}
-
+	
 	/*
 	 * static public String polygonData() { try { JSONObject geo = new
 	 * JSONObject(); JSONObject featureCollection = new JSONObject();

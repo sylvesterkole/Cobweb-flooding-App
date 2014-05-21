@@ -20,7 +20,7 @@
              android:onClick="PressButtonToTakePhoto"  
             android:text="@string/take_picture" 
             android:visibility="visible"
-            />
+            android:alpha="0.5"/> 
 
         <ImageView
             android:id="@+id/StatusToTakeImage"

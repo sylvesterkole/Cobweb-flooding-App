@@ -27,6 +27,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.graphics.PorterDuff.Mode;
 
 /*
@@ -46,15 +47,22 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 	private  File file;
 	private  ImageView putPictureInToBeMarked;
 	private Button SubmitPoints; 
+	private Button Reset ;
 	protected static final int POLYLINEDRAWNONIMAGE = 1324;
 	private RelativeLayout MainPage; 
 	private boolean WhatPointsImIOn= false;
 	private boolean GotTwoPoints = false;
+	private float[][] LineToBeDrawn = new float[400][2];
+	private int CurrentPosition=0;  
+	
+	private boolean  SubmitPointsFlag=false;
 	
 	private int x1=-1;
 	private int y1=-1;
 	private int x2=-1;
 	private int y2=-1;
+	
+	
 	
 	
 	 public void onCreate(Bundle savedInstanceState) {
@@ -73,8 +81,16 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 			  
 			  preview.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
 			  
+			  preview.setAlpha(0.5f);
+			  
 			  MainPage.addView(preview);
 			  
+			  for(int i=0;i<400;i++)
+			  {
+				  LineToBeDrawn[i][0]=-1;
+				  LineToBeDrawn[i][1]=-1;
+			  }
+			 
 				
 			    putPictureInToBeMarked = (ImageView) findViewById(R.id.imageView1);
 			    
@@ -87,9 +103,21 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 			    SubmitPoints.setOnClickListener(new View.OnClickListener() {
 			        @Override
 			        public void onClick(View v) {
+			        	SubmitPointsFlag=true;
 			        	 PressButtonToStorePoints(v);
 			        }
 			    });
+			    
+			    Reset  = (Button)findViewById(R.id.Reset);  
+			    Reset.setOnClickListener(new View.OnClickListener() {
+			        @Override
+			        public void onClick(View v) {
+			        	
+			        	PressButtonToReset(v);
+			        	  
+			        }
+			    });
+			    
 			    
 			    RelativeLayout v= (RelativeLayout) findViewById(R.id.AreaOfPolyImage);
 			    v.setOnTouchListener(this);
@@ -101,6 +129,24 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 			     
 		    
 		    }
+	 
+	 
+	 /*
+	  * Reset lines 
+	  */
+	 public void  PressButtonToReset(View v)
+	 {
+		 for(int i=0;i<400;i++)
+		  {
+			  LineToBeDrawn[i][0]=-1;
+			  LineToBeDrawn[i][1]=-1;
+		  }
+		 
+		 CurrentPosition=0; 
+		 preview.EmptyDraw();
+	 }
+	 
+	 
 	// two surface views one for image and one for drawing the point 
 	
 	 private void setImage() {
@@ -112,7 +158,19 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 
 			Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
 					bmOptions);
+			
+			if (bitmap==null)
+			{
+				Toast.makeText(this,
+						"SOMETHING HAPPENED!!! PICTURE did not load correctly, your phone is not compatible with the Cobweb Mark item plugin  ",
+						Toast.LENGTH_LONG).show();
+			}
+			
+			
 			putPictureInToBeMarked.setImageBitmap(bitmap); 
+			
+			 putPictureInToBeMarked.setAlpha(0.5f); //put on top then alpha it 
+			 
 			 
 		}
 	  
@@ -124,29 +182,29 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 		 finish(); 
 	 }
 
+	 public boolean onTouchEvent(MotionEvent me) {
+		  
+		 if(!SubmitPointsFlag)
+		 {
+			if(me.getAction() == MotionEvent.ACTION_MOVE && (CurrentPosition<399))
+			{
+				
+				LineToBeDrawn[CurrentPosition][0] =  (int) me.getRawX() ;
+				LineToBeDrawn[CurrentPosition][1] =  (int) me.getRawY() ;
+				CurrentPosition++;
+				  
+				//
+				
+				Log.d( Float.toString(LineToBeDrawn[CurrentPosition][0]) + ":" + Float.toString(LineToBeDrawn[CurrentPosition][1])  , "MyCamera");
+				
+				preview.PolyLineDraw(); //works for continuous  tracking  //add on points 
+			}
+		 }
+		  return false;
+	 }
 	@Override
 	public boolean onTouch(View arg0, MotionEvent arg1) {
-		// TODO Auto-generated method stub
-		Log.d("Touching","MyMarker"); 
-		if(!WhatPointsImIOn)
-		{
-			x1 = (int) arg1.getRawX() ;
-			y1 = (int) arg1.getRawY();
-			WhatPointsImIOn=!WhatPointsImIOn;
-		}else
-		{
-			x2 = (int) arg1.getRawX() ;
-			y2 = (int) arg1.getRawY();
-			WhatPointsImIOn=!WhatPointsImIOn;
-			GotTwoPoints=true;
-		}
-		
-		if(GotTwoPoints)
-		{
-		preview.DrawLine(x1, y1, x2, y2);
-		}
-		
-		SubmitPoints.setVisibility(Button.VISIBLE);
+		 
 		return false;
 	}
 	 
@@ -160,21 +218,85 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 	        super(context);
 	        surfaceHolder = getHolder();
 	        surfaceHolder.setFormat(PixelFormat.TRANSLUCENT); 
-	       paint.setColor(Color.RED);
-	        paint.setStyle(Style.FILL);
+	    //   paint.setColor(Color.RED);
+	    //    paint.setStyle(Style.FILL); 
+	     //   paint.setStrokeWidth(3f);
+	        
+	        
 	      //  setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			  setZOrderOnTop(true);
 			  
 	    }
+	     
 
 	    public void DrawLine(int x1,int y1,int x2,int y2)
 	    {
+	    	   paint.setColor(Color.RED);
+		        paint.setStyle(Style.FILL); 
+		        paint.setStrokeWidth(3f);
 	    	if (surfaceHolder.getSurface().isValid()) {
                 Canvas canvas = surfaceHolder.lockCanvas(); 
                 canvas.drawColor( Color.TRANSPARENT, PorterDuff.Mode.CLEAR );
                 surfaceHolder.setFormat(PixelFormat.TRANSLUCENT);  
                 canvas.drawLine(x1, y1, x2, y2, paint);
                 
+                paint.setColor(Color.BLUE); 
+                canvas.drawCircle(x1, y1, 30, paint);
+                
+               
+                paint.setColor(0xffff6600); // orange 
+                canvas.drawCircle(x2, y2, 30, paint);
+                
+                surfaceHolder.unlockCanvasAndPost(canvas);
+            }
+	    }
+	     
+	    public void  PolyLineDraw()
+	    { 
+	    	int check=1;
+	    	 paint.setStyle(Style.FILL); 
+		        paint.setStrokeWidth(4f);
+		        
+	    	if (surfaceHolder.getSurface().isValid()) {
+                Canvas canvas = surfaceHolder.lockCanvas(); 
+                canvas.drawColor( Color.TRANSPARENT, PorterDuff.Mode.CLEAR );
+                surfaceHolder.setFormat(PixelFormat.TRANSLUCENT);  
+                
+                
+                paint.setColor(Color.BLUE); 
+                
+                while(  (check !=399) && (LineToBeDrawn[check][0]!= -1 ) )
+   	    	 {
+                	
+   	    		 canvas.drawLine(LineToBeDrawn[check-1][0], LineToBeDrawn[check-1][1], LineToBeDrawn[check][0], LineToBeDrawn[check][1], paint);
+   	    		 check++;
+   	    	 }
+                
+                surfaceHolder.unlockCanvasAndPost(canvas);
+            }
+	    	  
+	    }
+	    
+	    
+	    public void  EmptyDraw()
+	    {
+	    	if (surfaceHolder.getSurface().isValid()) {
+                Canvas canvas = surfaceHolder.lockCanvas(); 
+                canvas.drawColor( Color.TRANSPARENT, PorterDuff.Mode.CLEAR );
+                surfaceHolder.setFormat(PixelFormat.TRANSLUCENT);
+                paint.setColor(Color.BLUE);  
+                surfaceHolder.unlockCanvasAndPost(canvas);
+            }
+	    }
+	    
+	    public void DrawPoint(int x,int y)
+	    {
+	    	if (surfaceHolder.getSurface().isValid()) {
+                Canvas canvas = surfaceHolder.lockCanvas(); 
+                canvas.drawColor( Color.TRANSPARENT, PorterDuff.Mode.CLEAR );
+                surfaceHolder.setFormat(PixelFormat.TRANSLUCENT);
+                paint.setColor(Color.BLUE); 
+                canvas.drawCircle(x, y, 30, paint);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
 	    }
@@ -182,9 +304,9 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 
 	}
 	
-			
+		
 	 
 }
-
+ 
 
 
