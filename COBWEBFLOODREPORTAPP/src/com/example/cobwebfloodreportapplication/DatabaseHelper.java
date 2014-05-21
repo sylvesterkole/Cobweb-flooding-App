@@ -179,6 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		drop(db);
 		createObsImage(db);
 	}
+	
 	public Cursor noPolyObs() {
 
 		return obsSel("", new String[] { OID, LAT, LON, DATE, TIME, TYPE,
@@ -326,6 +327,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	}
 
+	
+	public boolean imageAvailable() {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cur = db.rawQuery("SELECT " + OID + " FROM " + IMAGETABLE
+				+ ';', null);
+
+		boolean b=cur.moveToFirst();
+			
+		
+		db.close();
+		return b;
+
+	}
 	/*
 	 * The db.query has the following parameters:
 	 * 

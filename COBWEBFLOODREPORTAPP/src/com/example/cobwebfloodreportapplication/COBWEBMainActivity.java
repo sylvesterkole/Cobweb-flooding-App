@@ -3,13 +3,18 @@ package com.example.cobwebfloodreportapplication;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,16 +32,22 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 	private Button helpButton;
 	private String lang;
 	private TextView notice;
+
 	Context context;
-	private boolean currentlyuploading=false;
+	private boolean currentlyuploading = false;
 
 	boolean flag = true;
 
 	Handler handler;
 
+	ProgressDialog dialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		dialog = new ProgressDialog(this);
+		dialog.setMessage("Uploading Data");
 
 		context = this;
 		setContentView(R.layout.activity_cobwebmain);
@@ -63,19 +74,15 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor == null) {
 					cursor = db.polyObs();
 					if (cursor == null) {
-						
-						handler.post(new Runnable() {
-							public void run() {
-								buttonChange(oofflineButton);
-							}
-						});
+
+						noData();
 						db.close();
 						return;
 					}
 				}
+				// if (db.imageAvailable()) {
 				db.close();
 				flag = true;
-				
 
 				handler.post(new Runnable() {
 					public void run() {
@@ -84,9 +91,22 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 								Toast.LENGTH_LONG).show();
 					}
 				});
+				/*}else{
+					db.deleteTables();
+					noData();
+					db.close();
+				}*/
 
 			}
 		}.start();
+	}
+
+	private void noData() {
+		handler.post(new Runnable() {
+			public void run() {
+				buttonChange(oofflineButton);
+			}
+		});
 	}
 
 	private void buttonChange(Button b) {
@@ -225,13 +245,34 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		final Context context = this;
 		new Thread() {
 			public void run() {
-				
-				if(currentlyuploading)
-				{
+
+				ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo info = conMgr.getActiveNetworkInfo();
+
+				if (info == null
+						|| !info.isConnected()
+						|| !info.isAvailable()
+						|| Settings.System.getInt(context.getContentResolver(),
+								Settings.System.AIRPLANE_MODE_ON, 0) != 0) {
+					noConn();
 					return;
 				}
-				currentlyuploading=true;
+
+				Log.i("Upload connection", "Have a connection to upload");
+				if (currentlyuploading) {
+					return;
+				}
+
 				
+
+				currentlyuploading = true;
+				handler.post(new Runnable() {
+					public void run() {
+
+						dialog.show();
+					}
+				});
+
 				GeoJSONHelper.loadImages(context);
 				DatabaseHelper db = new DatabaseHelper(context);
 
@@ -240,11 +281,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						if(!GeoJSONHelper.nPolyObs(cursor, context)){
-							noConn();
-							
-							return;
-						}
+						GeoJSONHelper.nPolyObs(cursor, context);
 
 						cursor.moveToNext();
 					}
@@ -252,15 +289,13 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						if(!GeoJSONHelper.processObsPoly(cursor, db, context)){
-							noConn();
-							return;
-						}
+						GeoJSONHelper.nPolyObs(cursor, context);
 						cursor.moveToNext();
 					}
 
+				Log.d("imagedata",""+db.imageAvailable());
 				db.deleteTables();
-				
+
 				db.close();
 				handler.post(new Runnable() {
 
@@ -268,7 +303,8 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 						Toast.makeText(context, R.string.uploadText,
 								Toast.LENGTH_LONG).show();
 						buttonChange(oofflineButton);
-						currentlyuploading=false;
+						currentlyuploading = false;
+						dialog.hide();
 					}
 				});
 
@@ -276,16 +312,17 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 		}.start();
 	}
 
-	private void noConn(){
+	private void noConn() {
 		handler.post(new Runnable() {
 
 			public void run() {
 				Toast.makeText(context, R.string.noConnection,
 						Toast.LENGTH_LONG).show();
-				
+
 			}
 		});
 	}
+
 	private void setLocaleView(String lan) {
 		Locale mLocale = new Locale(lan);
 		Locale.setDefault(mLocale);

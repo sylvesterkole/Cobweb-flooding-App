@@ -160,7 +160,7 @@
     <string name="availText">Data available for upload</string>
     <string name="noObs">No Observations</string>
     <string name="requestUpload">Please make an observation</string>
-    <string name="noConnection">No connection</string>
+    <string name="noConnection">No connection available</string>
     
 
 

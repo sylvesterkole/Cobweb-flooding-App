@@ -31,4 +31,16 @@ public class PolyImage {
 		pl.put(prop, lProp);
 		return pl;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		PolyImage pi=(PolyImage)o;
+		return pi.file.equals(file);
+		
+	}
+	
+	@Override
+	public int hashCode(){
+		return file.hashCode();
+	}
 }
