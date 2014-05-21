@@ -43,7 +43,7 @@ public class GeoJSONHelper {
 	private final static String FCOLL = "FeatureCollection";
 	private final static String TYPE = "type";
 	private final static String FEATURES = "features";
-	private final static String FEAT = "feature";
+	private final static String FEAT = "Feature";
 	private final static String GEOMETRY = "geometry";
 	private final static String COORD = "coordinates";
 
@@ -324,7 +324,7 @@ public class GeoJSONHelper {
 
 		point.put(TYPE, POINT);
 		
-		point.put(COORD, "[" + lat + ',' + lon + ']');
+		point.put(COORD, new JSONArray("[" + lat + ',' + lon + ']'));
 		
 		feature.put(GEOMETRY, point);
 		return feature;
