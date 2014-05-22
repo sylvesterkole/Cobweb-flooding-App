@@ -119,24 +119,35 @@ public class UserLogInActivity extends Activity {
 					public void run() {
 
 						DatabaseHelper dh = new DatabaseHelper(cxt);
-						// Check for saved ID
-						String userID = dh.selectID();
-
-						if (userID == null) {
-							userID = UUID.randomUUID().toString();
-							dh.insertUser(userID);
-						}
 						
+						
+						// Code for matching user ID with login email, etc. required here
+						
+						
+						// Check for saved ID. Currently using first ID obtained
+						String userID = dh.selectID();
 						
 						SharedPreferences prefs = getSharedPreferences(Constant.SFOLDER,
 								MODE_PRIVATE);
+						SharedPreferences.Editor edit = prefs.edit();
+						
+						if (userID == null) {
+							userID = UUID.randomUUID().toString();
+							dh.insertUser(userID);
+							edit.putString(Constant.UID, userID);
+							edit.commit();
+							
+						}
+						
+						
+						
 
 						int nObs = prefs.getInt(Constant.NUMOBS, 0);
 						
 						nObs++;
 						dh.insertObs(nObs, userID);
 						dh.close();
-						SharedPreferences.Editor edit = prefs.edit();
+						
 						edit.putInt(Constant.NUMOBS, nObs);
 						edit.commit();
 						

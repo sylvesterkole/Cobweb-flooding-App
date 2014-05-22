@@ -7,10 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -34,7 +32,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
+import android.util.SparseArray;
 
 public class GeoJSONHelper {
 
@@ -72,8 +70,8 @@ public class GeoJSONHelper {
 	private static String FSTRING = "File name ";
 	private static String GEOJEX = ".geoj";
 
-	private static HashMap<Integer, Set<String>> image = new HashMap<Integer, Set<String>>();
-	private static HashMap<Integer, Set<PolyImage>> polImage = new HashMap<Integer, Set<PolyImage>>();
+	private static SparseArray<Set<String>> image = new SparseArray<Set<String>>();
+	private static SparseArray<Set<PolyImage>> polImage = new SparseArray<Set<PolyImage>>();
 
 	static public void loadImages(Context context) {
 
@@ -115,8 +113,6 @@ public class GeoJSONHelper {
 		// System.out.println("images loaded");
 		db.close();
 	}
-	
-	
 
 	static public boolean nPolyObs(Cursor cursor, Context context) {
 
@@ -147,7 +143,8 @@ public class GeoJSONHelper {
 				featureCollection.put(FEATURES, features);
 				featureCollection.put(PROP, properties);
 
-				return sendGeoJSON(features.toString(4), geoJFN(cursor), context);
+				return sendGeoJSON(features.toString(4), geoJFN(cursor),
+						context);
 			}
 
 		} catch (JSONException e) {
@@ -158,7 +155,8 @@ public class GeoJSONHelper {
 	}
 
 	private static String geoJFN(Cursor cursor) {
-		return FOLDER_LOC + cursor.getString(9) + cursor.getInt(0) + GEOJEX;
+		return FOLDER_LOC + cursor.getString(9) + '_' + cursor.getInt(0)
+				+ GEOJEX;
 	}
 
 	static public boolean processObsPoly(Cursor cursor, DatabaseHelper db,
@@ -323,16 +321,18 @@ public class GeoJSONHelper {
 		JSONObject point = new JSONObject();
 
 		point.put(TYPE, POINT);
-		
+
 		point.put(COORD, new JSONArray("[" + lat + ',' + lon + ']'));
-		
+
 		feature.put(GEOMETRY, point);
 		return feature;
 
 	}
 
 	public static String b64FileName(String fn) {
-		return fn.substring(fn.lastIndexOf('/') + 1, fn.length() - 5) + B64EX;
+		String fln = fn.substring(fn.lastIndexOf('/') + 1);
+		fln = fln.substring(0, fln.indexOf('.'));
+		return fln + B64EX;
 	}
 
 	public static void addFileName(JSONArray arr, String fn, int cnt)
@@ -344,39 +344,6 @@ public class GeoJSONHelper {
 		arr.put(jo);
 
 	}
-/*
-	public void postFiles(int mode, final Context context) {
-
-		File storageDir = new File(FOLDER_LOC);
-		final String[] fn = storageDir.list();
-		// final String[]fn={"fromphone.txt"};
-		if (fn == null || fn.length == 0)
-			Toast.makeText(context, R.string.noUpload, Toast.LENGTH_LONG)
-					.show();
-		else {
-
-			Toast.makeText(context, fn[0], Toast.LENGTH_LONG).show();
-			new Thread() {
-				public void run() {
-
-					// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-
-					String file = FOLDER_LOC
-							+ fn[0].substring(0, fn[0].length() - 5);
-					// + ".txt";
-					// String file=FOLDER_LOC +"fromPhone2.txt";
-					// GeoJSONHelper.geoJSON(file);
-					post(file, "application/json", false,
-							fn[0].substring(0, fn[0].length() - 5), context);
-
-					post(FOLDER_LOC + fn[0], "image/jpeg", true, fn[0], context);
-
-				}
-			}.start();
-
-		}
-
-	}*/
 
 	private static boolean post(final String fn, final String mime, boolean b,
 			String fs, Context context) {
@@ -387,12 +354,12 @@ public class GeoJSONHelper {
 
 			CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-			Log.d(fn, "posting to "+fs);
 			String hn = fs;
 			if (b) {
-				hn = hn.substring(0, fs.length() - 5) + B64EX;
-			}else{
-				Log.d("geo file",hn);
+				hn = hn.substring(0, fs.indexOf('.')) + B64EX;
+				Log.d("flie server", hn);
+			} else {
+				Log.d("geo file", hn);
 			}
 
 			Properties properties = new Properties();
@@ -405,16 +372,12 @@ public class GeoJSONHelper {
 
 			properties.getProperty("pcapiurl") + hn);
 
-			// System.out.println("here");
-
 			File file = new File(fn);
 			;
 			if (b) {
 				FileInputStream imageInFile = new FileInputStream(file);
 				byte imageData[] = new byte[(int) file.length()];
 				imageInFile.read(imageData);
-
-				System.out.println("len ------------- " + file.length());
 
 				String imageDataString = encode(imageData);
 
@@ -441,8 +404,8 @@ public class GeoJSONHelper {
 
 			httppost.setEntity(mpEntity);
 
-			System.out
-					.println("executing request " + httppost.getRequestLine());
+			Log.i("HTTP request",
+					"executing request " + httppost.getRequestLine());
 
 			if (b) {
 				httppost.setHeader("C2ontent-Transfer-Encoding", "base64");
@@ -450,11 +413,10 @@ public class GeoJSONHelper {
 			HttpResponse response = httpclient.execute(httppost);
 			HttpEntity resEntity = response.getEntity();
 
-			System.out.println(response.getStatusLine());
+			Log.i("HTTP Status Line", response.getStatusLine().toString());
 			if (resEntity != null) {
-				System.out.println(EntityUtils.toString(resEntity));
-			}
-			if (resEntity != null) {
+				Log.i("HTTP Entity", EntityUtils.toString(resEntity));
+
 				resEntity.consumeContent();
 			}
 
@@ -506,39 +468,5 @@ public class GeoJSONHelper {
 		}
 		return new String(dest);
 	}
-	
-	/*
-	 * static public String polygonData() { try { JSONObject geo = new
-	 * JSONObject(); JSONObject featureCollection = new JSONObject();
-	 * featureCollection.put(TYPE, FCOLL); JSONArray featureList = new
-	 * JSONArray();
-	 * 
-	 * featureCollection.put(FEATURES, featureList); JSONObject polygon = new
-	 * JSONObject(); polygon.put(TYPE, POLYGON); JSONArray coord = new
-	 * JSONArray("[[[" + 1 + "," + 0 + "]" + ",[" + 2 + "," + 0 + "]" + ",[" + 3
-	 * + "," + 0 + "],[" + 1 + "," + 0 + "]]]"); polygon.put(COORD, coord);
-	 * JSONObject feature = new JSONObject(); feature.put(GEOMETRY, polygon);
-	 * feature.put(TYPE, FEAT);
-	 * 
-	 * // JSONArray prop = properties(); // feature.put(PROP, prop);
-	 * 
-	 * featureList.put(feature);
-	 * 
-	 * return featureCollection.toString(4);
-	 * 
-	 * } catch (JSONException e) { e.printStackTrace(); } return null; }
-	 */
-
-	/*
-	 * static private void geoJSON(String fn) { final File f = new File(fn);
-	 * 
-	 * if (f.exists()) f.delete();
-	 * 
-	 * try { f.createNewFile(); String s = polygonData(); PrintWriter pw = new
-	 * PrintWriter(new FileOutputStream(f)); pw.println(s); pw.flush();
-	 * pw.close(); } catch (IOException e) { e.printStackTrace(); }
-	 * 
-	 * }
-	 */
 
 }
