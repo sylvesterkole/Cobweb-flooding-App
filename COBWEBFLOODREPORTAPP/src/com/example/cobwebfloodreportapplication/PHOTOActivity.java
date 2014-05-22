@@ -8,12 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.example.cobwebfloodreportapplication.DataTypeDialogs.Flood_Damage_Dialog;
-import com.example.cobwebfloodreportapplication.DataTypeDialogs.High_River_Levels_Dialog;
-import com.example.cobwebfloodreportapplication.DataTypeDialogs.InitialDialog;
-import com.example.cobwebfloodreportapplication.DataTypeDialogs.Notes_Dialog;
-import com.example.cobwebfloodreportapplication.DataTypeDialogs.PreInitialDialog;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -38,11 +33,17 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.cobwebfloodreportapplication.DataTypeDialogs.Flood_Damage_Dialog;
+import com.example.cobwebfloodreportapplication.DataTypeDialogs.High_River_Levels_Dialog;
+import com.example.cobwebfloodreportapplication.DataTypeDialogs.InitialDialog;
+import com.example.cobwebfloodreportapplication.DataTypeDialogs.Notes_Dialog;
+import com.example.cobwebfloodreportapplication.DataTypeDialogs.PreInitialDialog;
+
 public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private static final int REQUEST_IMAGE_CAPTURE = 100;
 	protected static final int POLYGON = 101;
-	protected static final int MARKERPLACEDONIMAGE = 1323; 
+	protected static final int MARKERPLACEDONIMAGE = 1323;
 	protected static final int POLYLINEDRAWNONIMAGE = 1324;
 	private File photoFile = null;
 	private Bitmap photoBit = null;
@@ -51,7 +52,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private Button nextButton;
 	private Button deleteImage;
 	private Button submitImage;
-	private ImageView imageView; 
+	private ImageView imageView;
 	private File storageDir;
 	private ArrayList<Bitmap> imageItem = new ArrayList<Bitmap>();
 	private GridView gridview;
@@ -64,8 +65,8 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private DialogueData Overal_type_data;
 	private GPSTracker location;
 	private PHOTOActivity main = this;
-	private  String MarkedPositon = ""; 
-	private  String LinePositon = ""; 
+	private String MarkedPositon = "";
+	private String LinePositon = "";
 
 	// String pp;
 
@@ -84,6 +85,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		imageAdapter = new ImageAdapter(this, imageItem);
 		gridview = (GridView) findViewById(R.id.gridView);
 		gridview.setAdapter(imageAdapter);
+
 		setGridView();
 		setClickableButtons();
 		// submitData = new Submission();
@@ -91,14 +93,13 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		polyLine = new HashMap<String, String>();
 		photoPath = new HashMap<String, Bitmap>();
 		location = new GPSTracker(this);
-		
+
 		/*
 		 * Start initial dialog to get type 
 		 */
-		
-		SetupInitialData_type(); 
-		
-		
+
+		SetupInitialData_type();
+
 		/*
 		 * if (savedInstanceState == null) imageFile = null; else imageFile =
 		 * new File(savedInstanceState.getString(IMAGE));
@@ -191,43 +192,22 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	private void setAttachedInfo() {
 
 		// this help set addInfo completed if ok button is click in dialog
-		if((type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)  )
-		{
-		
-		final ImageDescriptionDialog dialog = new ImageDescriptionDialog(this);
+		if ((type_data.getFloodType().compareTo("Flood water") == 0)
+				|| (type_data.getFloodType().compareTo("dwr llifogydd") == 0)) {
 
-		new Thread(new Runnable() {
-			public void run() {
-				while (!dialog.isSetDialog())
-					;
-
-				addInfo = dialog.isSetDialog();
-				data = dialog.getData();
-
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						requestPolygon();
-
-					}
-				});
-			}
-		}).start();
-		
-		}else if ((type_data.getFloodType().compareTo("High River Levels")== 0) || (type_data.getFloodType().compareTo("Lefelau Afonydd Uchel")==0)  )
-		{
-			final High_River_Levels_Dialog dialog = new High_River_Levels_Dialog(this);
+			final ImageDescriptionDialog dialog = new ImageDescriptionDialog(
+					this);
 
 			new Thread(new Runnable() {
 				public void run() {
 					while (!dialog.isSetDialog())
-						; 
+						;
+
 					addInfo = dialog.isSetDialog();
 					data = dialog.getData();
-					data.setFloodDepth("0");
-					data.setFlowVelocity("0"); 
-					runOnUiThread(new Runnable() { 
+
+					runOnUiThread(new Runnable() {
+
 						@Override
 						public void run() {
 							requestPolygon();
@@ -236,20 +216,42 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 					});
 				}
 			}).start();
-		}
-		else if ((type_data.getFloodType().compareTo("Flood Damage")== 0) || (type_data.getFloodType().compareTo("Difrod llifogydd")==0)  )
-		{
+
+		} else if ((type_data.getFloodType().compareTo("High River Levels") == 0)
+				|| (type_data.getFloodType().compareTo("Lefelau Afonydd Uchel") == 0)) {
+			final High_River_Levels_Dialog dialog = new High_River_Levels_Dialog(
+					this);
+
+			new Thread(new Runnable() {
+				public void run() {
+					while (!dialog.isSetDialog())
+						;
+					addInfo = dialog.isSetDialog();
+					data = dialog.getData();
+					data.setFloodDepth("0");
+					data.setFlowVelocity("0");
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							requestPolygon();
+
+						}
+					});
+				}
+			}).start();
+		} else if ((type_data.getFloodType().compareTo("Flood Damage") == 0)
+				|| (type_data.getFloodType().compareTo("Difrod llifogydd") == 0)) {
 			final Flood_Damage_Dialog dialog = new Flood_Damage_Dialog(this);
 
 			new Thread(new Runnable() {
 				public void run() {
 					while (!dialog.isSetDialog())
-						; 
+						;
 					addInfo = dialog.isSetDialog();
 					data = dialog.getData();
 					data.setFloodDepth("0");
-					data.setFlowVelocity("0"); 
-					runOnUiThread(new Runnable() { 
+					data.setFlowVelocity("0");
+					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							requestPolygon();
@@ -259,21 +261,21 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				}
 			}).start();
 		}
-		
+
 		else
-			
+
 		{
 			final Notes_Dialog dialog = new Notes_Dialog(this);
 
 			new Thread(new Runnable() {
 				public void run() {
 					while (!dialog.isSetDialog())
-						; 
+						;
 					addInfo = dialog.isSetDialog();
 					data = dialog.getData();
 					data.setFloodDepth("0");
-					data.setFlowVelocity("0"); 
-					runOnUiThread(new Runnable() { 
+					data.setFlowVelocity("0");
+					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							requestPolygon();
@@ -283,57 +285,46 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				}
 			}).start();
 		}
-		
+
 	}
-	
+
 	private void SetupInitialData_type() {
 
-		// intitial Type to start the flow 
-		
+		// intitial Type to start the flow
 
-		  
 		final InitialDialog openingdialog = new InitialDialog(this);
-			
-			
-			type_data = openingdialog.getData();
-			 
-			new Thread(new Runnable() {
-				public void run() {
-					while (!openingdialog.isSetDialog())
-						;
-	 
-					type_data = openingdialog.getData();
 
-					 
-				}
-			}).start();
-			
-			
-			
+		type_data = openingdialog.getData();
+
+		new Thread(new Runnable() {
+			public void run() {
+				while (!openingdialog.isSetDialog())
+					;
+
+				type_data = openingdialog.getData();
+
+			}
+		}).start();
+
 		final PreInitialDialog preInitialDialog = new PreInitialDialog(this);
-		
-		
+
 		Overal_type_data = preInitialDialog.getData();
-		
 
 		new Thread(new Runnable() {
 			public void run() {
 				while (!preInitialDialog.isSetDialog())
 					;
- 
-				Overal_type_data =preInitialDialog.getData();
 
-				 
+				Overal_type_data = preInitialDialog.getData();
+
 			}
 		}).start();
-
-		
-		
 
 	}
 
 	private void dispatchTakePictureIntent() {
-		 Intent takePictureIntent = new Intent(PHOTOActivity.this,cobweb.addons.QualityControlledCamera.class);
+		Intent takePictureIntent = new Intent(PHOTOActivity.this,
+				cobweb.addons.QualityControlledCamera.class);
 		// Ensure that there's a camera activity to handle the intent
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 			// Create the File where the photo should go
@@ -391,12 +382,11 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 			setImage();
-			
-			//call activity to mark the image here
-			
-			//call activity to generate a polyline here
-			 
-			
+
+			// call activity to mark the image here
+
+			// call activity to generate a polyline here
+
 		} else if (requestCode == POLYGON && resultCode == RESULT_OK) {
 			setsubmitButton();
 
@@ -406,33 +396,29 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		} else if (resultCode == RESULT_CANCELED) {
 			Toast.makeText(this, R.string.photoCancel, Toast.LENGTH_LONG)
 					.show();
-		} else if (resultCode == MARKERPLACEDONIMAGE)
-		{
-		//	Toast.makeText(this, R.string.watermarked, Toast.LENGTH_SHORT)
-		//	.show();
-			
-		//	 MarkedPositon = data.getStringExtra("MarkedArea");
-			
-		 	
-			 
-		 	 
-		 	 Log.d("test","myApp");
-		 	if((type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)) {
-		 		 Intent LineImage = new Intent(PHOTOActivity.this,cobweb.addons.PolylineOnImage.class);
-		 	 if (photoFile != null) {
+		} else if (resultCode == MARKERPLACEDONIMAGE) {
+			// Toast.makeText(this, R.string.watermarked, Toast.LENGTH_SHORT)
+			// .show();
+
+			// MarkedPositon = data.getStringExtra("MarkedArea");
+
+			Log.d("test", "myApp");
+			if ((type_data.getFloodType().compareTo("Flood water") == 0)
+					|| (type_data.getFloodType().compareTo("dwr llifogydd") == 0)) {
+				Intent LineImage = new Intent(PHOTOActivity.this,
+						cobweb.addons.PolylineOnImage.class);
+				if (photoFile != null) {
 					LineImage.putExtra(MediaStore.EXTRA_OUTPUT,
 							Uri.fromFile(photoFile));
 					startActivityForResult(LineImage, REQUEST_IMAGE_CAPTURE);
 				}
-		 	}
-		}else if (resultCode == POLYLINEDRAWNONIMAGE)
+			}
+		} else if (resultCode == POLYLINEDRAWNONIMAGE)
 
 		{
-			//LinePositon = data.getStringExtra("LinePostion"); 
-			Toast.makeText(this, R.string.polyline, Toast.LENGTH_LONG)
-			.show();
-		}
-		else {
+			// LinePositon = data.getStringExtra("LinePostion");
+			Toast.makeText(this, R.string.polyline, Toast.LENGTH_LONG).show();
+		} else {
 			Toast.makeText(this,
 					"SOMETHING HAPPENED!!! PICTURE WAS NOT CAPTURED",
 					Toast.LENGTH_LONG).show();
@@ -469,39 +455,48 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		String path = photoFile.getAbsolutePath();
 		if (!photoPath.containsKey(path))
 			photoPath.put(path, bitmap);
-		
+
 		/*
 		 * We have gotten image so now to marker
 		 */
-		if((type_data.getFloodType().compareTo("Debris in River")== 0) || (type_data.getFloodType().compareTo("Malurion yn yr Afon")==0) ||
-			(type_data.getFloodType().compareTo("Blocked Drain or Culvert")== 0) || (type_data.getFloodType().compareTo("Drain neu Cwlfert blocio")==0) ||
-			(type_data.getFloodType().compareTo("Blocked Bridge")== 0) || (type_data.getFloodType().compareTo("Bridge blocio")==0) ||
-			(type_data.getFloodType().compareTo("Flood water")== 0) || (type_data.getFloodType().compareTo("dwr llifogydd")==0)||
-			(type_data.getFloodType().compareTo("Debris")== 0) || (type_data.getFloodType().compareTo("Darnau")==0))
-				 
+		if ((type_data.getFloodType().compareTo("Debris in River") == 0)
+				|| (type_data.getFloodType().compareTo("Malurion yn yr Afon") == 0)
+				|| (type_data.getFloodType().compareTo(
+						"Blocked Drain or Culvert") == 0)
+				|| (type_data.getFloodType().compareTo(
+						"Drain neu Cwlfert blocio") == 0)
+				|| (type_data.getFloodType().compareTo("Blocked Bridge") == 0)
+				|| (type_data.getFloodType().compareTo("Bridge blocio") == 0)
+				|| (type_data.getFloodType().compareTo("Flood water") == 0)
+				|| (type_data.getFloodType().compareTo("dwr llifogydd") == 0)
+				|| (type_data.getFloodType().compareTo("Debris") == 0)
+				|| (type_data.getFloodType().compareTo("Darnau") == 0))
+
 		{
-			 
-			 Intent MarkImage = new Intent(PHOTOActivity.this,cobweb.addons.MarkItemOfInterestOnImage.class);
-		    
+
+			Intent MarkImage = new Intent(PHOTOActivity.this,
+					cobweb.addons.MarkItemOfInterestOnImage.class);
+
 			if (photoFile != null) {
 				MarkImage.putExtra(MediaStore.EXTRA_OUTPUT,
 						Uri.fromFile(photoFile));
 				startActivityForResult(MarkImage, REQUEST_IMAGE_CAPTURE);
 			}
 			// if just polyline needed
-		}else if ((type_data.getFloodType().compareTo("Trash/Tide line")== 0) || (type_data.getFloodType().compareTo("Llinell Sbwriel / Llanw")==0) ||
-				(type_data.getFloodType().compareTo("Land Erosion")== 0) || (type_data.getFloodType().compareTo("Erydiad tir")==0)) 
-				{
-			Intent LineImage = new Intent(PHOTOActivity.this,cobweb.addons.PolylineOnImage.class);
-		 	 if (photoFile != null) {
-					LineImage.putExtra(MediaStore.EXTRA_OUTPUT,
-							Uri.fromFile(photoFile));
-					startActivityForResult(LineImage, REQUEST_IMAGE_CAPTURE);
-				}
-			
-			
-				}
-		
+		} else if ((type_data.getFloodType().compareTo("Trash/Tide line") == 0)
+				|| (type_data.getFloodType().compareTo(
+						"Llinell Sbwriel / Llanw") == 0)
+				|| (type_data.getFloodType().compareTo("Land Erosion") == 0)
+				|| (type_data.getFloodType().compareTo("Erydiad tir") == 0)) {
+			Intent LineImage = new Intent(PHOTOActivity.this,
+					cobweb.addons.PolylineOnImage.class);
+			if (photoFile != null) {
+				LineImage.putExtra(MediaStore.EXTRA_OUTPUT,
+						Uri.fromFile(photoFile));
+				startActivityForResult(LineImage, REQUEST_IMAGE_CAPTURE);
+			}
+
+		}
 
 	}
 
@@ -545,7 +540,6 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				imageItem.remove(temp);
 			}
 		}
-		
 
 		imageAdapter.notifyDataSetChanged();
 
@@ -553,7 +547,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private void showNextItemsOnList() {
 		addItemsToList();
-		if ( imageItem.size() > 1) {
+		if (imageItem.size() > 1) {
 			int i = imageItem.indexOf(photoBit);
 			if (i < (imageItem.size() - 1)) {
 				photoBit = imageItem.get(++i);
@@ -585,6 +579,11 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				MODE_PRIVATE);
 		polygon = prefs.getString(Constant.POLYPR, null);
 
+		if (polygon != null) {
+			Editor edit = prefs.edit();
+			edit.remove(Constant.POLYPR);
+			edit.commit();
+		}
 		// System.out.println("polygon " + prefs.getString("polygon", null));
 
 		// Toast.makeText(this, "READY TO SEND \n Polygone :"+
@@ -594,7 +593,6 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 		setData();
 
-		
 		this.finish();
 
 	}
@@ -607,7 +605,7 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 				MODE_PRIVATE);
 
 		final int oid = prefs.getInt(Constant.NUMOBS, 0);
-		
+
 		final Context context = this;
 		new Thread() {
 			public void run() {
@@ -620,18 +618,20 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 					else
 						db.insertImagePoly(s, oid, line);
 				}
-				
+
 				fNote = fNote + MarkedPositon + LinePositon;
-				
+
 				fType = Overal_type_data + ":" + fType;
-				 
+
 				db.updateMetaObs(oid, fDepth, fNote, fType, fDate, fVel, lat,
 						lon, polygon);
+				// Log.i("polygon",polygon);
 				db.close();
-				
+
+				polygon = null;
 				imageItem.clear();
 				photoPath.clear();
-				imageAdapter.notifyDataSetChanged();
+
 			}
 		}.start();
 
@@ -639,41 +639,38 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 
 	private boolean requestPolygon() {
 
-		
-		//check if waterlogged to ask for polgygon  
-		
-		if((type_data.getFloodType().compareTo("Waterlogged land")== 0) || (type_data.getFloodType().compareTo("tir llawn dwr")==0)  ) 
-		{
-		
-		 
-		
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				/*
-				 * switch (which) { case DialogInterface.BUTTON_POSITIVE:
-				 */
-				Intent mapintent = new Intent(main, PolygonLayerMap.class);
+		// check if waterlogged to ask for polgygon
 
-				startActivityForResult(mapintent, POLYGON);
-				// start for result
-				/*
-				 * break;
-				 * 
-				 * case DialogInterface.BUTTON_NEGATIVE: // No button clicked //
-				 * Submit everything setsubmitButton(); break; }
-				 */ 
-			}
-		};
+		if ((type_data.getFloodType().compareTo("Waterlogged land") == 0)
+				|| (type_data.getFloodType().compareTo("tir llawn dwr") == 0)) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(
-		// "Do you want to draw a rough polygon sketch of flooding area?").
-				R.string.pleasedrawapolygon)
-				.setNeutralButton("Ok", dialogClickListener).show()
-				// .setNegativeButton("No", dialogClickListener).show()
-				.setCanceledOnTouchOutside(false);
- 
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					/*
+					 * switch (which) { case DialogInterface.BUTTON_POSITIVE:
+					 */
+					Intent mapintent = new Intent(main, PolygonLayerMap.class);
+
+					startActivityForResult(mapintent, POLYGON);
+					// start for result
+					/*
+					 * break;
+					 * 
+					 * case DialogInterface.BUTTON_NEGATIVE: // No button clicked //
+					 * Submit everything setsubmitButton(); break; }
+					 */
+				}
+			};
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(
+			// "Do you want to draw a rough polygon sketch of flooding area?").
+					R.string.pleasedrawapolygon)
+					.setNeutralButton("Ok", dialogClickListener).show()
+					// .setNegativeButton("No", dialogClickListener).show()
+					.setCanceledOnTouchOutside(false);
+
 		}
 		askPoly = true;
 		return askPoly;

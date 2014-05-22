@@ -51,6 +51,9 @@ public class GeoJSONHelper {
 
 	// Properties Point
 	private final static String LOC = "Location";
+	
+	private final static String OBT="Obtained";
+	private final static String OSM="OpenStreetMap";
 	private final static String LOCVAL = "GPS Coordinates";
 
 	// Properties General
@@ -159,14 +162,14 @@ public class GeoJSONHelper {
 				+ GEOJEX;
 	}
 
-	static public boolean processObsPoly(Cursor cursor, DatabaseHelper db,
-			Context context) {
+	static public boolean processObsPoly(Cursor cursor, Context context) {
 
 		try {
 
 			JSONObject point = pointGeo(cursor);
 
 			String poly = cursor.getString(10);
+			
 			JSONObject polygon = polygonPolyline(poly, POLYGON);
 
 			JSONArray properties = props(cursor);
@@ -179,16 +182,25 @@ public class GeoJSONHelper {
 			pProp.put(gpsProp);
 			point.put(PROP, pProp);
 
+			
+			JSONObject polProp=new JSONObject();
+			polProp.put(OBT, OSM);
+			JSONArray polyP=new JSONArray();
+			polyP.put(polProp);
+			polygon.put(PROP, polyP);
+			
+			features.put(point);
+			features.put(polygon);
+			
 			JSONObject featureCollection = new JSONObject();
 			featureCollection.put(TYPE, FCOLL);
 			featureCollection.put(FEATURES, features);
 			featureCollection.put(PROP, properties);
 
-			features.put(point);
-			features.put(polygon);
+			
 
 			// Send feature collection
-			return sendGeoJSON(features.toString(4), geoJFN(cursor), context);
+			return sendGeoJSON(featureCollection.toString(4), geoJFN(cursor), context);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -289,7 +301,7 @@ public class GeoJSONHelper {
 			throws JSONException {
 		String[] str = polygon.split(" ");
 		int n = Integer.parseInt(str[0]);
-		StringBuilder sb = new StringBuilder('[');
+		StringBuilder sb = new StringBuilder("[[");
 		for (int i = 1; i < n; i++) {
 
 			sb.append('[');
@@ -301,13 +313,21 @@ public class GeoJSONHelper {
 			if (i != n - 1)
 				sb.append(',');
 		}
-		sb.append(']');
+		if(type==POLYGON){
+			sb.append(",[");
+			String[] crd = str[1].split(":");
+			sb.append(crd[0]);
+			sb.append(',');
+			sb.append(crd[1]);
+			sb.append(']');
+		}
+		sb.append("]]");
 
 		JSONObject feature = new JSONObject();
 		feature.put(TYPE, FEAT);
 		JSONObject poly = new JSONObject();
 		poly.put(TYPE, type);
-		poly.put(COORD, sb.toString());
+		poly.put(COORD, new JSONArray(sb.toString()));
 		feature.put(GEOMETRY, poly);
 		return feature;
 	}

@@ -252,6 +252,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cVal.put(FLOWV, velocity);
 		cVal.put(LAT, lat);
 		cVal.put(LON, lon);
+		if(polygon!=null)cVal.put(POLYGON, polygon);
 		// cVal.put(, value);
 		int i = db.update(OBSTABLE, cVal, OID + " ='" + oid + '\'', null);
 		db.close();

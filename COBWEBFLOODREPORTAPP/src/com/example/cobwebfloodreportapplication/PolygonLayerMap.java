@@ -169,7 +169,7 @@ public class PolygonLayerMap extends Activity implements OnClickListener {
 			String polygon = "";
 
 			int noOfpoly = pointList.size();
-			StringBuilder sb=new StringBuilder(noOfpoly);
+			StringBuilder sb=new StringBuilder(String.valueOf(noOfpoly));
 			
 			for(GeoPoint gp:pointList){
 				sb.append(' ');
@@ -177,7 +177,7 @@ public class PolygonLayerMap extends Activity implements OnClickListener {
 				sb.append(':');
 				sb.append(gp.getLongitude());
 			}
-			SharedPreferences.Editor editor = getSharedPreferences("COBWEB",
+			SharedPreferences.Editor editor = getSharedPreferences(Constant.SFOLDER,
 					MODE_PRIVATE).edit();
 			editor.putString(Constant.POLYPR, sb.toString());
 			editor.commit();

@@ -268,6 +268,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 					public void run() {
 
 						dialog.show();
+						
 					}
 				});
 
@@ -287,9 +288,11 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 				if (cursor != null)
 					while (!cursor.isAfterLast()) {
 
-						GeoJSONHelper.nPolyObs(cursor, context);
+						
+						GeoJSONHelper.processObsPoly(cursor, context);
 						cursor.moveToNext();
 					}
+				
 
 				// Log.d("imagedata",""+db.imageAvailable());
 				// Log.d("imagedata",""+GeoJSONHelper.imageSize());
@@ -303,7 +306,8 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 								Toast.LENGTH_LONG).show();
 						buttonChange(oofflineButton);
 						currentlyuploading = false;
-						dialog.hide();
+						dialog.dismiss();
+						
 					}
 				});
 
