@@ -359,7 +359,7 @@ public class GeoJSONHelper {
 				hn = hn.substring(0, fs.indexOf('.')) + B64EX;
 				Log.d("flie server", hn);
 			} else {
-				Log.d("geo file", hn);
+				Log.i("geo file", hn);
 			}
 
 			Properties properties = new Properties();
