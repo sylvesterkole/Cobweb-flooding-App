@@ -1,6 +1,8 @@
 package cobweb.addons;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import com.example.cobwebfloodreportapplication.R;
 
@@ -49,9 +51,7 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 	private Button SubmitPoints; 
 	private Button Reset ;
 	protected static final int POLYLINEDRAWNONIMAGE = 1324;
-	private RelativeLayout MainPage; 
-	private boolean WhatPointsImIOn= false;
-	private boolean GotTwoPoints = false;
+	private RelativeLayout MainPage;  
 	private float[][] LineToBeDrawn = new float[400][2];
 	private int CurrentPosition=0;  
 	
@@ -61,9 +61,7 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 	private int y1=-1;
 	private int x2=-1;
 	private int y2=-1;
-	
-	
-	
+	 
 	
 	 public void onCreate(Bundle savedInstanceState) {
 		    super.onCreate(savedInstanceState);
@@ -131,6 +129,38 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 		    }
 	 
 	 
+	 public Bitmap decodeFile(File f) {
+		    Bitmap b = null;
+		    try {
+		        // Decode image size
+		        BitmapFactory.Options o = new BitmapFactory.Options();
+		        o.inJustDecodeBounds = true;
+
+		        FileInputStream fis = new FileInputStream(f);
+		        BitmapFactory.decodeStream(fis, null, o);
+		        fis.close();
+		        int IMAGE_MAX_SIZE = 900;
+		        int scale = 1;
+		        if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+		            scale = (int) Math.pow(
+		                    2,
+		                    (int) Math.round(Math.log(IMAGE_MAX_SIZE
+		                            / (double) Math.max(o.outHeight, o.outWidth))
+		                            / Math.log(0.5)));
+		        }
+
+		        // Decode with inSampleSize
+		        BitmapFactory.Options o2 = new BitmapFactory.Options();
+		        o2.inSampleSize = scale;
+		        fis = new FileInputStream(f);
+		        b = BitmapFactory.decodeStream(fis, null, o2);
+		        fis.close();
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		    return b;
+		}
+	 
 	 /*
 	  * Reset lines 
 	  */
@@ -155,9 +185,9 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 			 
 	 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 		 
-
-			Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
-					bmOptions);
+	 
+	 Bitmap bitmap = decodeFile(file);
+ 
 			
 			if (bitmap==null)
 			{
@@ -178,7 +208,27 @@ public class PolylineOnImage extends Activity implements OnTouchListener{
 	 {
 		setResult(POLYLINEDRAWNONIMAGE);  
 		String GiveBackMarkerPostion =  "x1=" + x1 + ",y1=" + y1 + ":x2=" + x2 + ",y2=" +y2 ;
-		this.getIntent().putExtra("LinePostion", GiveBackMarkerPostion);
+		
+		
+		 
+		 String PolyLineToGiveBack = "";
+		 
+		 for (int i=0 ; i < 399 &&  (LineToBeDrawn[i][0]) !=-1 ; i++)
+		 {
+			
+					 PolyLineToGiveBack= PolyLineToGiveBack + LineToBeDrawn[i][0] +","+ LineToBeDrawn[i][1];
+					 
+					 if(!(i ==398 || (LineToBeDrawn[i+1][0]  ==-1) ))
+					 {
+						 PolyLineToGiveBack= PolyLineToGiveBack + ",";
+					 }
+					 
+		 }
+		 
+		this.getIntent().putExtra("PolyLine", PolyLineToGiveBack);
+		
+		
+		
 		 finish(); 
 	 }
 

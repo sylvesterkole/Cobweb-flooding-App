@@ -152,6 +152,9 @@ public class QualityControlledCamera extends Activity implements SensorEventList
 			//setResult(0);   
 			setResult(RESULT_OK);  
 			  //Finishing this activity and going back to PHOTOActivity 
+			
+			// need to add in recorded info like orientation of the camera. 
+			
 			  finish();
 	  }
 	  

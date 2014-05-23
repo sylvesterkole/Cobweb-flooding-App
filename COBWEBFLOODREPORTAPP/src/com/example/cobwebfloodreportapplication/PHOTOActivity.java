@@ -352,10 +352,23 @@ public class PHOTOActivity extends Activity implements OnClickListener {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
 				.format(new Date());
 
-		storageDir = new File(Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES).getAbsolutePath()
-				+ "/" + Constant.SFOLDER + "/");
-
+		   
+		if  (Environment.DIRECTORY_PICTURES ==null)
+		{
+			storageDir = new File(getCacheDir().getAbsolutePath() 
+					+ "/" + Constant.SFOLDER + "/");
+		}else
+		{
+			storageDir = new File(Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_PICTURES).getAbsolutePath()
+					+ "/" + Constant.SFOLDER + "/");
+		}
+		
+		 
+		 
+		 
+		
+		  
 		// Create the storage directory if it does not exist
 		if (!storageDir.exists()) {
 			if (!storageDir.mkdirs()) {

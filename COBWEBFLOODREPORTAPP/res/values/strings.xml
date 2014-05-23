@@ -152,9 +152,8 @@
 <string name="watermarked">Marked the centre of the observation </string>
 <string name="waterLine">Draw the edge of the Water or Trash or Land erosion line</string>
 <string name="clickonwater">Click on the centre of the observation or Water area </string>
-<string name="polyline">You have drawn the edge of the water </string>
+<string name="polyline">You have drawn the edge</string>
 <string name="dialog_pretype">Type :</string>
-
 
 <string name="uploadText">Data Uploaded</string>
     <string name="availText">Data available for upload</string>

@@ -155,7 +155,7 @@
 <string name="watermarked">Marked the centre of the water</string>
 <string name="waterLine">Press two points on the picture to draw the edge of the water line</string>
 <string name="clickonwater">Click on the centre of the water </string>
-<string name="polyline">You have drawn the edge of the water </string>
+<string name="polyline">You have drawn the edge  </string>
 
  <string-array name="dialog_pretype_spinnerText">
         <item>Pre-Flood</item>
@@ -172,5 +172,7 @@
     <string name="noObs">Dim Sylwadau</string>
     <string name="requestUpload">Gwnewch sylw</string>
     <string name="noConnection">No connection</string>
+     <string name="Reset">Reset</string>
+      <string name="Submit">Submit</string>
      
 </resources>
