@@ -48,6 +48,7 @@ public class COBWEBMainActivity extends Activity implements OnClickListener {
 
 		dialog = new ProgressDialog(this);
 		dialog.setMessage("Uploading Data");
+		
 
 		context = this;
 		setContentView(R.layout.activity_cobwebmain);
